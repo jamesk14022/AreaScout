@@ -1,5 +1,14 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://heroku_6kd5v6r3:k940aoraacrtpvkpg1ablhqvcj@ds225382.mlab.com:25382/heroku_6kd5v6r3');
+
+try{
+  var config = require('./devconfig.js');
+  //this is pull from the heroku config
+  const MONGODB_URI = config.mongo.URI;
+
+  mongoose.connect(MONGODB_URI);
+}catch(e){
+  console.log(e)
+}
 
 const busStopSchema = new mongoose.Schema({
   _id: { type: String },

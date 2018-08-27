@@ -90,31 +90,19 @@ var constituencies = mongoose.model('assembly_constituencies', constituencySchem
 
 exports.findPostcode = function(postcode, cb){
   ons.find({ pcd: postcode }).lean().exec(function(err, result){
-    if(err){
-      console.log(err)
-    }else{
-      cb(result);
-    }
+    cb(err, result);
   });
 }
 
 exports.findConstituency = function(onsCode, cb){
   constituencies.find({ ConstituencyOnsCode: onsCode }).lean().exec(function(err, result){
-    if(err){
-      console.log(err);
-    }else{
-      cb(result);
-    }
+    cb(err, result);
   });
 }
 
 exports.findAssemblyMembers = function(id, cb){
   members.find({ ConstituencyId: id }).lean().exec(function(err, result){
-    if(err){
-      console.log(err);
-    }else{
-      cb(result);
-    }
+    cb(err, result);
   });
 }
 

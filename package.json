@@ -7,6 +7,7 @@
     "migrate_schools": "node ./schools-migration"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "^1.7.0",

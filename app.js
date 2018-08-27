@@ -7,7 +7,7 @@ var logger = require('morgan');
 var app = express();
 
 try{
-  var config = require('./config.js');
+  var config = require('./devconfig.js');
 }catch(e){
   console.log(e)
 }

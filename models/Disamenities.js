@@ -43,10 +43,6 @@ exports.findWasteSites = function(long, lat, radius, cb){
         spherical: true
     }}
   ]).exec(function(err, result){
-    if(err){
-      console.log(err)
-    }else{
-      cb(result);
-    }
+    cb(err, result);
   });
 }

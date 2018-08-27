@@ -32,8 +32,8 @@ const busStopSchema = new mongoose.Schema({
   DepotOpsArea: String,
   ServiceDirection: String,
   geometry: {
-    "type": String,
-    "coordinates": [Number],
+    type: String,
+    coordinates: [Number],
     index: '2dsphere'
   }
 });
@@ -53,10 +53,6 @@ exports.findBusStops = function(long, lat, radius, cb){
         spherical: true
     }}
   ]).exec(function(err, result){
-    if(err){
-      console.log(err)
-    }else{
-      cb(result);
-    }
+    cb(err, result);
   });
 }
