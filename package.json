@@ -4,14 +4,20 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "migrate_schools": "node ./schools-migration"
+    "nodemon": "nodemon ./bin/www",
+    "migrate_schools": "node ./transformations/schools-migration",
+    "transform_gps": "node ./transformations/gp-geocoding",
+    "transform_dentist": "node ./transformations/dentist-geocoding",
+    "transform_library": "node ./transformations/library-geocoding"
   },
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "bluebird": "^3.5.1",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "^1.7.0",
     "mongoose": "^5.2.9",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "node-geocoder": "^3.22.0"
   }
 }

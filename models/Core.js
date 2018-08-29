@@ -89,7 +89,8 @@ var members =        mongoose.model('assembly_members', assemblyMemberSchema, 'a
 var constituencies = mongoose.model('assembly_constituencies', constituencySchema, 'assembly_constituencies');
 
 exports.findPostcode = function(postcode, cb){
-  ons.find({ pcd: postcode }).lean().exec(function(err, result){
+  ons.find({ pcds: postcode }).lean().exec(function(err, result){
+    console.log(result);
     cb(err, result);
   });
 }
