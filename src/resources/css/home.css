@@ -1,0 +1,60 @@
+a#brand{
+  font-size: 36px;
+  color: white !important;
+}
+
+a#brand sub{
+  font-size: 25px;
+  margin-left: 10px;
+}
+
+div.right.item{
+  margin-bottom: 20px !important;
+}
+
+.content:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  
+  display: block;
+  background-image: url("/house6.jpg");
+  height: 700px;
+  filter: blur(1px) opacity(40%);
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 700px;
+  background: black;
+}
+
+br {
+  display: block;
+  margin: 5px 0;
+}
+
+.ui.secondary.pointing.menu{
+  border-bottom: none;
+  border-top: none;
+  margin-top: 15px;
+}
+
+.ui.inverted.vertical.center.aligned.segment{
+  padding: 0;
+}
+
+.svg-inline--fa{
+  margin-right: 10px;
+  margin-bottom: 3px;
+  color: #2f5593;
+}
+
+.ui.inverted.segment, .ui.primary.inverted.segment{
+  background: none;
+}

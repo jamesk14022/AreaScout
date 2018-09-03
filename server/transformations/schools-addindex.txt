@@ -1,0 +1,7 @@
+db.landfills.createIndex({ geometry: "2dsphere" });
+
+mongo ds225382.mlab.com:25382/heroku_6kd5v6r3 -u test -p jamesam123
+
+mongoimport --username test --password jamesam123 --host ds225382.mlab.com:25382 --db heroku_6kd5v6r3 --collection landfills --file /Users/devjames/Desktop/landfill2016 --jsonarray
+
+mongo path  /usr/local/var/mongodb/ 
