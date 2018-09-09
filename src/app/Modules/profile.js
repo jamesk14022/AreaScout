@@ -1,5 +1,3 @@
-
-
 export const SET_CURRENT_PROFILE = 'auth/SET_CURRENT_PROFILE';
 
 const initialState = {

@@ -2,15 +2,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router';
-
+import { withRouter } from 'react-router-dom';
 // Action creators and helpers
-import { establishCurrentUser } from './Modules/auth';
+import { establishCurrentUser } from './modules/auth';
 import { isServer } from '../store';
 
-import Routes from './Routes';
+import Routes from './routes';
 
 import 'semantic-ui-css/semantic.min.css';
+import './../resources/css/global.css'
 import './App.css';
 
 class App extends Component {

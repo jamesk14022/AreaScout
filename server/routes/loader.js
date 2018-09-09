@@ -12,9 +12,9 @@ import { Frontload, frontloadServerRender } from 'react-frontload';
 import Loadable from 'react-loadable';
 
 // Our store, entrypoint, and manifest
-import createStore from '../src/store';
-import App from '../src/app/app';
-import manifest from '../build/asset-manifest.json';
+import createStore from './../../src/store';
+import App from './../../src/app/app';
+import manifest from './../../build/asset-manifest.json';
 
 // LOADER
 export default (req, res) => {
@@ -40,7 +40,7 @@ export default (req, res) => {
 
   // Load in our HTML file from our build
   fs.readFile(
-    path.resolve(__dirname, '../build/index.html'),
+    path.resolve(__dirname, './../../build/index.html'),
     'utf8',
     (err, htmlData) => {
       // If there's an error... serve up something nasty

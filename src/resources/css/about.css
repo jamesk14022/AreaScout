@@ -1,0 +1,19 @@
+div.ui.segment.text{
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  margin-bottom: 5em;
+}
+
+div.ui.segment.text h2{
+  text-decoration: underline;
+  text-decoration-color: #2f5593;
+}
+
+div.ui.segment.text p{
+  font-size: 17px;
+}
+
+div.ui.segment.text li{
+  font-size: 17px;
+}
