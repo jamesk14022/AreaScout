@@ -1,0 +1,15 @@
+i.search.query{
+  margin-right: 10px;
+}
+
+hr.upper.divide{
+  margin: 2%;
+}
+
+div.ui.vertical.segment{
+  border: 0;
+}
+
+div.ui.segment.main.results{
+  padding: 0% 3%;
+}

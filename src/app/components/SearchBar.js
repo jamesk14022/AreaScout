@@ -1,5 +1,5 @@
-import React, { Component, Link } from 'react';
-import Utils from './../modules/ApiUtils';
+import React, { Component } from 'react';
+import { getLongLat } from './../modules/ApiUtils';
 import { Form, Icon, Input } from 'semantic-ui-react';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
@@ -37,7 +37,7 @@ class SearchBar extends Component{
   }
 
   getLongLat(query){
-  	Utils.getLongLat(query).then((response) => {
+  	getLongLat(query).then((response) => {
   	  console.log(response);
       const { lng, lat } = response.results[0].geometry.location;
       const postcode = this.findPostcode(response.results[0]['address_components']);
@@ -50,12 +50,10 @@ class SearchBar extends Component{
   	});
   }
 
-  warn(){
-
-  }
-
   render(){
   	let { loading } = this.state;
+    let { mobile } = this.props;
+
     return(
       <Form onSubmit={ this.handleSubmit }>
 	    <Input
@@ -66,8 +64,9 @@ class SearchBar extends Component{
 	    placeholder='Search...' 
 	    size='big'
 		  style={{
-		    width: '500px',
-		    marginTop: '2em'
+		    width: mobile ? '95%' : '500px',
+		    marginTop: '2em',
+        marginBottom: mobile ? '2em' : '0em'
 		  }}
 	    />
       </Form>

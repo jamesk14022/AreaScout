@@ -1,3 +1,8 @@
+.ui.menu .item>i.icon{
+  margin-bottom: 1.2em;
+  margin-left: 1em;
+}
+
 .spread:before {
   content: "";
   position: absolute;
@@ -24,6 +29,7 @@ br {
   display: block;
   margin: 5px 0;
 }
+
 
 .ui.secondary.pointing.menu{
   border-bottom: none;

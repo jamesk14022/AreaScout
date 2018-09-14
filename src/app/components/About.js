@@ -1,20 +1,8 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  Container,
-  Grid,
-  Icon,
-  Label,
-  Menu,
-  Responsive,
-  Segment,
-  Select,
-  Sidebar,
-  Visibility,
-} from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 import './../../resources/css/about.css';
-import DesktopContainer from './DesktopContainer';
-import MobileContainer from './MobileContainer';
+import DesktopContainer from './containers/DesktopContainer';
+import MobileContainer from './containers/MobileContainer';
 import Footer from './Footer';
 
 

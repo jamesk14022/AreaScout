@@ -18,3 +18,11 @@ a#brand sub{
 div.right.item{
   margin-bottom: 15px !important;
 }
+
+div.right.item button.inverted a{
+  color: #fff;
+}
+
+div.shadow{
+  box-shadow: 4px 5px #ffff;
+}

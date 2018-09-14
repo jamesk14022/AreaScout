@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -9,16 +10,16 @@ import {
 
 const Footer = () => (
   <div id="Footer">
-    <Segment inverted vertical style={{ padding: '5em 0em' }}>
+    <Segment inverted vertical style={{ padding: '2em 0em' }}>
       <Container>
         <Grid divided inverted stackable>
           <Grid.Row>
             <Grid.Column width={3}>
               <Header inverted as='h4' content='Links' />
               <List link inverted>
-                <List.Item as='a'>Search</List.Item>
-                <List.Item as='a'>About</List.Item>
-                <List.Item as='a'>Contact</List.Item>
+                <List.Item><Link to='/'>Home</Link></List.Item>
+                <List.Item><Link to='/about'>About</Link></List.Item>
+                <List.Item><Link to='/contact'>Contact</Link></List.Item>
               </List>
             </Grid.Column>
             <Grid.Column width={10}>

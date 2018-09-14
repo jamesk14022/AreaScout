@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import SearchBar from './SearchBar';
 import {
   Container,
@@ -18,8 +19,12 @@ const HomepageHeading = ({ mobile }) => (
         marginTop: '4.3em',
       }}
     />
-    <SearchBar />
+    <SearchBar mobile={(mobile) ? true : false } />
   </Container>
-)
+);
+
+HomepageHeading.propTypes = {
+  mobile: PropTypes.bool
+}
 
 export default withRouter(HomepageHeading);
