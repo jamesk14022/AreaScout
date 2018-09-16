@@ -3,6 +3,8 @@ import ListCard from './ListCard';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import { fetchSchools } from './../../modules/ApiUtils'; 
 import { changeArrayPropertyNames, sortArrayAscending } from './../../modules/ArrayUtils';
+import { faSchool } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class SchoolsCard extends Component{
   
@@ -12,7 +14,7 @@ class SchoolsCard extends Component{
   }
 
   parseSchoolData(response){
-    let schools = changeArrayPropertyNames(response.slice(0, 5), [{ oldName: 'Institution_Name', newName: 'Name' }]);
+    let schools = changeArrayPropertyNames(response, [{ oldName: 'Institution_Name', newName: 'Name' }]);
     schools =  changeArrayPropertyNames(schools, [{ oldName: 'Institution_Type', newName: 'Type' }]);
     schools = sortArrayAscending(schools);
     return schools;
@@ -31,7 +33,7 @@ class SchoolsCard extends Component{
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat){
+    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat || prevProps.r !== this.props.r){
       this.updateCard(this.props);
     }
   }
@@ -42,10 +44,11 @@ class SchoolsCard extends Component{
 
   render(){
     let { isLoading, schools } = this.state;
+    let { long, lat, r } = this.props;
 
     if(!isLoading){
       return(
-        <ListCard heading="Schools" items={ schools } />
+        <ListCard longitude={ long } latitude={ lat } r={ r } heading="Schools" items={ schools } icon={ <FontAwesomeIcon className='card icon' icon={ faSchool } /> } />
       );
     }else{
       return(

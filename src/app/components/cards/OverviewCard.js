@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Dimmer, Loader, List, Card, Segment } from 'semantic-ui-react';
-import { fetchOverview } from './../../modules/ApiUtils'; 
+import { Dimmer, Loader, List, Card, Segment, Image } from 'semantic-ui-react';
+import { fetchOverview } from './../../modules/ApiUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 class OverviewCard extends Component{
   
@@ -39,13 +41,13 @@ class OverviewCard extends Component{
         <div id="ListCard">
           <Card>
             <Card.Content>
+              <Image floated='left' size='mini'><FontAwesomeIcon className='card icon' icon={faInfoCircle} /></Image>
               <Card.Header>Overview</Card.Header>
               <Card.Meta>{this.props.postcode}</Card.Meta>
             </Card.Content>
             <Card.Content extra>
             <List className="card-list" divided relaxed>
               <List.Item>
-                <List.Icon name='github' size='large' verticalAlign='middle' />
                 <List.Content>
                   <List.Header as='a'>{this.state.overview.constituency[0].ConstituencyName}</List.Header>
                   <List.Description as='a'>{this.state.overview.constituency[0].ConstituencyId}</List.Description>
@@ -55,7 +57,6 @@ class OverviewCard extends Component{
                 </List.Content>
               </List.Item>
               <List.Item>
-                <List.Icon name='github' size='large' verticalAlign='middle' />
                 <List.Content>
                   <List.Header as='a'>Assembly Members</List.Header>
                   <List.Description as='a'>Type</List.Description>

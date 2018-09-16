@@ -6,6 +6,8 @@ import { changeArrayPropertyNames,
          addArrayProperty,
          sortArrayAscending,
          resultsFilterDuplicates } from './../../modules/ArrayUtils';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class DisamenitiesCard extends Component{
   
@@ -40,7 +42,7 @@ class DisamenitiesCard extends Component{
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat){
+    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat || prevProps.r !== this.props.r){
       this.updateCard(this.props);
     }
   }
@@ -51,10 +53,11 @@ class DisamenitiesCard extends Component{
 
   render(){
     let { isLoading, disamenities } = this.state;
+    let { long, lat, r } = this.props;
 
     if(!isLoading){
       return(
-        <ListCard heading="Disamenities" items={ disamenities } />
+        <ListCard longitude={ long } latitude={ lat } r={ r } heading="Disamenities" items={ disamenities } icon={ <FontAwesomeIcon className='card icon' icon={ faExclamationTriangle } /> } />
       );
     }else{
       return(

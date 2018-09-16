@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ListCard from './ListCard';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import { fetchAmenities } from './../../modules/ApiUtils'; 
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { changeArrayPropertyNames, addArrayProperty, sortArrayAscending } from './../../modules/ArrayUtils';
 
 class AmenitiesCard extends Component{
@@ -12,7 +14,7 @@ class AmenitiesCard extends Component{
   }
 
   parseAmenityData(response){
-    let busStops = changeArrayPropertyNames(response.busStops.slice(0, 3), [{ oldName: 'Stop_Name', newName: 'Name' }]);
+    let busStops = changeArrayPropertyNames(response.busStops, [{ oldName: 'Stop_Name', newName: 'Name' }]);
     busStops = addArrayProperty(busStops, 'Type', 'Bus Stop');
 
     let gps = changeArrayPropertyNames(response.GPS, [{ oldName: 'PracticeName', newName: 'Name' }]);
@@ -25,7 +27,7 @@ class AmenitiesCard extends Component{
     libraries = addArrayProperty(libraries, 'Type', 'Library');
 
     let result = busStops.concat(gps, dentists, libraries);
-    result = sortArrayAscending(result).slice(0, 10);
+    result = sortArrayAscending(result);
     return result;
   }
 
@@ -43,7 +45,7 @@ class AmenitiesCard extends Component{
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat){
+    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat || prevProps.r !== this.props.r){
       this.updateCard(this.props);
     }
   }
@@ -54,10 +56,11 @@ class AmenitiesCard extends Component{
 
   render(){
     let { isLoading, amenities } = this.state;
+    let { long, lat, r } = this.props;
 
     if(!isLoading){
       return(
-        <ListCard heading="Amenities" items={ amenities } />
+        <ListCard longitude={ long } latitude={ lat } r={ r } heading="Amenities" items={ amenities } icon={ <FontAwesomeIcon className='card icon' icon={ faUsers } /> } />
       );
     }else{
       return(

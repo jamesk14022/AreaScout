@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import { Dimmer, Loader, List, Card, Segment } from 'semantic-ui-react';
+import { Button, Dimmer, Loader, List, Card, Segment, Image } from 'semantic-ui-react';
 import { fetchStreetCrime, fetchPoliceNeighbourhood, fetchPoliceNeighbourhoodDetails } from './../../modules/ApiUtils'; 
+import { getDistanceFromLatLon } from './../../modules/GeoUtils';
+import { sortArrayAscending, sliceArrayByDistance } from './../../modules/ArrayUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSchool, faExclamationTriangle, faUsers, faGavel } from '@fortawesome/free-solid-svg-icons';
+import MapModal from './../modals/MapModal';
+import ListCard from './ListCard';
 
 class PoliceCard extends Component{
   
@@ -9,14 +15,16 @@ class PoliceCard extends Component{
   	this.state = { policing: {}, isLoading: true };
   }
 
-  updateCard({ long, lat }){
+  updateCard({ long, lat, r }){
     let data = {}; 
-
     this.setState({ isLoading: true });
+
     fetchStreetCrime(long, lat).then((response) => {
       return response.json();
     }).then((content) => {
-      data.streetCrime = content;
+      data.streetCrime = this.addCrimeDistance(content, lat, long);
+      data.streetCrime = sortArrayAscending(data.streetCrime);
+      data.streetCrime = sliceArrayByDistance(data.streetCrime, r/1000);
       return fetchPoliceNeighbourhood(long, lat);
     }).then((response) => {
       return response.json();
@@ -35,7 +43,7 @@ class PoliceCard extends Component{
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat){
+    if(prevProps.long !== this.props.long || prevProps.lat !== this.props.lat || prevProps.r !== this.props.r){
       this.updateCard(this.props);
     }
   }
@@ -44,38 +52,41 @@ class PoliceCard extends Component{
     this.updateCard(this.props);
   }
 
+  addCrimeDistance(streetCrimeArray, lat, lon){
+    for(let i = 0; i<streetCrimeArray.length; i++){
+      let crimeLat = parseFloat(streetCrimeArray[i]['location']['latitude']);
+      let crimeLon = parseFloat(streetCrimeArray[i]['location']['longitude']);
+      streetCrimeArray[i]['dist'] = {};
+      let distBetweenPoints = getDistanceFromLatLon(lat, lon, crimeLat, crimeLon)*1000;
+      streetCrimeArray[i]['dist']['calculated'] = distBetweenPoints.toFixed(2);
+    }
+    return streetCrimeArray;
+  }
+
+  transposeProperties(array){
+    for(let i = 0; i < array.length; i++){
+      array[i]['Name'] = array[i]['category'];
+      array[i]['Type'] = array[i]['location']['street']['name'] === 'On or near ' ? '' :  array[i]['location']['street']['name'];
+      array[i]['geometry'] = {};
+      array[i]['geometry']['coordinates'] = [array[i]['location']['longitude'], array[i]['location']['latitude']];
+    }
+    return array;
+  }
+
   render(){
     let { isLoading } = this.state;
-
-
+    let { long, lat, r } = this.props;
     if(!isLoading){
       return(
-        <div id="ListCard">
-          <Card>
-            <Card.Content>
-              <Card.Header>Police Data</Card.Header>
-              <Card.Meta>{this.state.policing.neighbourhood.description.replace(/<(?:.|\n)*?>/gm, '')}</Card.Meta>
-            </Card.Content>
-            <Card.Content extra>
-              <List className="card-list" divided relaxed>
-                {this.state.policing.streetCrime.map((crime, index) => (
-                  <List.Item key={ index }>
-                    <List.Icon name='github' size='large' verticalAlign='middle' />
-                    <List.Content>
-                      <List.Header as='a'>{ crime.category }</List.Header>
-                      <List.Description as='a'>
-                        { (crime.location.street.name == 'On or near ') ? '' :  crime.location.street.name }
-                      </List.Description>
-                    </List.Content>
-                    <List.Content floated='right'>
-                      1 km
-                    </List.Content>
-                  </List.Item>
-                ))}
-              </List>
-            </Card.Content>
-          </Card>
-        </div>
+        <ListCard 
+          subheading={ this.state.policing.neighbourhood.description.replace(/<(?:.|\n)*?>/gm, '') }
+          icon={<FontAwesomeIcon className='card icon' icon={faGavel} />}
+          heading='Police Data'
+          longitude={ long }
+          latitude={ lat }
+          r={ r }
+          items={ this.transposeProperties(this.state.policing.streetCrime) }
+        />
       );
     }else{
       return(

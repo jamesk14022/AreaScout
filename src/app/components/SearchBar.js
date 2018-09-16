@@ -10,13 +10,13 @@ class SearchBar extends Component{
   	this.state = { loading: false, query: '' };
   	this.handleSubmit = this.handleSubmit.bind(this);
   	this.handleChange = this.handleChange.bind(this);
+    this.getLongLat = this.getLongLat.bind(this);
   }
 
   //fired when user types
   handleChange(e){
   	this.setState({ query: e.target.value });
   }
-
 
   //takes takes an address components array
   findPostcode(addressComponents){
@@ -41,7 +41,9 @@ class SearchBar extends Component{
   	  console.log(response);
       const { lng, lat } = response.results[0].geometry.location;
       const postcode = this.findPostcode(response.results[0]['address_components']);
-      this.props.dispatch(push(`/search?long=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}&postcode=${encodeURIComponent(postcode)}&r=2000`));
+      const uri = `/search?long=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}&postcode=${encodeURIComponent(postcode)}&queryString=${encodeURIComponent(this.state.query)}&r=2000`;
+
+      this.props.dispatch(push(uri));
       this.setState({ loading: false });
   	}).catch((err) => {
   	  this.setState({ loading: false });

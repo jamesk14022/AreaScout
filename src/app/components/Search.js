@@ -12,6 +12,7 @@ import {
   Accordion,
   Menu
 } from 'semantic-ui-react';
+import { Slider } from 'react-semantic-ui-range'
 import DesktopContainer from './containers/DesktopContainer';
 import MobileContainer from './containers/MobileContainer';
 import Footer from './Footer';
@@ -33,29 +34,29 @@ class Search extends Component{
 
   constructor(props){
     super(props);
-    this.state = { query: '54 Ballyhenry Road, Comber, BT235JZ', loading: true, activeAccord: 0 };
+    this.state = { query: '', loading: true, activeAccord: 0, r: 2000 };
     console.log(this.props);
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount(){
-      let { long, lat, r, postcode } = this.props.location.query;
-      if(!long || !lat || !r){
-        this.props.dispatch(push(`/notfound`));
-      }else{
-        this.setState({ long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
-      }
+    let { long, lat, r, postcode, queryString } = this.props.location.query;
+    if(!long || !lat || !r || !queryString){
+      this.props.dispatch(push(`/notfound`));
+    }else{
+      this.setState({ query: queryString, long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
+    }
   }
 
   // props.location.query injected by queryWithRouter.js
   componentDidUpdate(prevProps){
     if(this.props.location.query !== prevProps.location.query){
-      let { long, lat, r, postcode } = this.props.location.query;
-      if(!long || !lat || !r){
+      let { long, lat, r, postcode, queryString } = this.props.location.query;
+      if(!long || !lat || !r || !queryString){
         this.props.dispatch(push(`/notfound`));
       }else{
-        this.setState({ long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
+        this.setState({ query: queryString, long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
       }
     }
   }
@@ -67,23 +68,28 @@ class Search extends Component{
     this.setState({ activeAccord: newIndex });
   }
 
+  handleRangeChange(e, { value }){
+    this.setState({ r: value })
+  }
   render(){
     let { query, loading, activeAccord } = this.state;
-    let rangeOptions = [ { key: '1', value: '1', text: '1 km' },
-                         { key: '2', value: '2', text: '2 km' },
-                         { key: '3', value: '3', text: '3 km' },
-                         { key: '4', value: '4', text: '4 km' },
-                         { key: '5', value: '5', text: '5 km' } ]
+    let rangeOptions = {
+      start: this.state.r,
+      min:1000,
+      max:10000,
+      step:1000,
+      onChange: (value) => { this.setState({ r: value }) }
+    }
 
   	return(
   	  <div id="Search">
   	  	<ResponsiveContainer title='Search' breadcrumb={false}>
         <Segment
-          style={{ 'padding': '2%' }}
           vertical
+          className='top bar'
         >
         <Grid columns={3}>
-          <Grid.Row textAlign='center'>
+          <Grid.Row>
             <Grid.Column>
               <h3 style={{ 'marginLeft': 0 }}>
                 <Icon onClick={ this.handleSubmit } name='search' className='query' inverted circular link />
@@ -96,37 +102,50 @@ class Search extends Component{
         </Segment>
         <Segment vertical className='main results' >
           <Grid stackable>
-          <Grid.Row textAlign='center'>
+          <Grid.Row>
               <Grid.Column width={4}>
+                <Segment vertical className='filter'>
+                <h3>Filter</h3>
+                <hr />
                 <Accordion as={Menu} vertical>
                   <Menu.Item>
                     <Accordion.Title
                       active={activeAccord === 0}
-                      content='Size'
+                      content={'Range ' + this.state.r/1000 + ' km'}
                       index={0}
                       onClick={this.handleClick}
                     />
-                    <Accordion.Content active={activeAccord === 0} content={<p>test</p>} />
+                    <Accordion.Content active={activeAccord === 0} content={<Slider value={this.state.r} discrete inverted={false} settings={rangeOptions} />} />
                   </Menu.Item>
                   <Menu.Item>
                     <Accordion.Title
                       active={activeAccord === 1}
-                      content='Colors'
+                      content='Amenities'
                       index={1}
                       onClick={this.handleClick}
                     />
                     <Accordion.Content active={activeAccord === 1} content={<p>test</p>} />
                   </Menu.Item>
+                  <Menu.Item>
+                    <Accordion.Title
+                      active={activeAccord === 1}
+                      content='Disamenities'
+                      index={2}
+                      onClick={this.handleClick}
+                    />
+                    <Accordion.Content active={activeAccord === 2} content={<p>test</p>} />
+                  </Menu.Item>
                 </Accordion>
+                </Segment>
               </Grid.Column>
               <Grid.Column width={12}>
-              <Grid stackable>
+              <Grid centered stackable>
                 <Grid.Row>
                 <Grid.Column width={8}>
-                  { loading ? '' : <OverviewCard center postcode={ this.state.postcode } /> }
+                  { loading ? '' : <OverviewCard postcode={ this.state.postcode } /> }
                 </Grid.Column>
                 <Grid.Column width={8}>
-                  { loading ? '' : <SchoolsCard center long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
+                  { loading ? '' : <SchoolsCard long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row textAlign='center'>
@@ -139,10 +158,10 @@ class Search extends Component{
               </Grid.Row>
               <Grid.Row textAlign='center'>
                 <Grid.Column width={8}>
-                  { loading ? '' : <PoliceCard center long={ this.state.long } lat={ this.state.lat } /> }
+                  { loading ? '' : <PoliceCard center long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
                 </Grid.Column>
                 <Grid.Column width={8}>
-                  { loading ? '' : <PoliceCard center long={ this.state.long } lat={ this.state.lat } /> }
+
                 </Grid.Column>
               </Grid.Row>
               </Grid>

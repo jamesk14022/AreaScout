@@ -2,8 +2,21 @@ i.search.query{
   margin-right: 10px;
 }
 
+div.ui.segment.top.bar{
+  padding: 2% 15%;
+}
+
 hr.upper.divide{
-  margin: 2%;
+  margin-top: 15px;
+}
+
+div.ui.card{
+  margin: 0px auto;
+}
+
+div.ui.vertical.accordion.ui.menu{
+  width: 100%;
+  text-align: 
 }
 
 div.ui.vertical.segment{
@@ -11,5 +24,9 @@ div.ui.vertical.segment{
 }
 
 div.ui.segment.main.results{
-  padding: 0% 3%;
+  padding: 1% 15%;
+}
+
+div.semantic_ui_range_inner{
+  width: 100%;
 }

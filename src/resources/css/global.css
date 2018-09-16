@@ -15,6 +15,10 @@ a#brand sub{
   margin-left: 10px;
 }
 
+.ui.card>.content, .ui.cards>.card>.content{
+  flex-grow: 0;
+}
+
 div.right.item{
   margin-bottom: 15px !important;
 }
@@ -23,6 +27,16 @@ div.right.item button.inverted a{
   color: #fff;
 }
 
+div.extra.center.aligned.content.show.more{
+  font-weight: bold; 
+  font-size: 16px;
+}
+
 div.shadow{
   box-shadow: 4px 5px #ffff;
+}
+
+svg.card.icon{
+  font-size: 28px;
+  color: #2f5593;
 }

@@ -1,0 +1,13 @@
+div.popover{
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
+div.modal-list.item{
+  padding: 5%;
+  margin-right: 4%;
+}
+
+div.modal-list.item.focused{
+  background-color: #9bbef7;
+}

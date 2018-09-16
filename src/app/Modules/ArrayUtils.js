@@ -37,8 +37,18 @@ export const resultsFilterDuplicates = (array, objectProp) => {
 
 //sorts array of objects by ascenindg distance from lat long
 //if distance prop not specified we assume item.dist.calculated
-export const sortArrayAscending = (array, distanceProp) => {
+export const sortArrayAscending = (array) => {
   return array.sort((a, b) => (
   	parseFloat(a['dist']['calculated']) - parseFloat(b['dist']['calculated'])
   ));
+}
+
+//takes distance in km
+export const sliceArrayByDistance = (array, km) => {
+  for(let i = 0; i<array.length; i++){
+  	if(array[i]['dist']['calculated'] > km){
+  	  array.splice(i, 1);
+  	}
+  }
+  return array;
 }
