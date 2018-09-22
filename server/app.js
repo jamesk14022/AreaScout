@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import api from './routes/api';
 import createError from 'http-errors';
 import express from 'express';
@@ -5,22 +6,18 @@ import path from 'path';
 import logger from 'morgan';
 import loader from './routes/loader';
 import Loadable from 'react-loadable';
-import config from './devconfig.js';
-
+import mongoose from 'mongoose';
 var app = express();
+dotenv.config();
 
 // Add headers
 app.use(function (req, res, next) {
-
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
-
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
   // Request headers you wish to allow
   res.setHeader("Access-Control-Allow-Headers", "content-type, Content-Type, Accept");
-
   if ( req.method === 'OPTIONS' ) {
       res.end();
   }else{
@@ -29,10 +26,7 @@ app.use(function (req, res, next) {
 }
 });
 
-//this is pull from the heroku config
-const MONGODB_URI = process.env.MONGODB_URI || config.mongo.URI;
-var mongoose = require('mongoose');
-mongoose.connect(MONGODB_URI, {config: { autoIndex: false }});
+mongoose.connect(process.env.MONGODB_URI, {config: { autoIndex: false }});
 
 app.use(logger('dev'));
 app.use(express.json());

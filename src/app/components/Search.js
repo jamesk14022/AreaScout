@@ -6,13 +6,17 @@ import {
   Form,
   Grid,
   Label,
+  Button,
+  Field,
   Icon,
   Segment,
+  Checkbox,
   Select,
   Accordion,
   Menu
 } from 'semantic-ui-react';
 import { Slider } from 'react-semantic-ui-range'
+import ToggleBox from './ToggleBox'
 import DesktopContainer from './containers/DesktopContainer';
 import MobileContainer from './containers/MobileContainer';
 import Footer from './Footer';
@@ -30,14 +34,32 @@ const ResponsiveContainer = ({ children, title, breadcrumb }) => (
   </div>
 );
 
+const amenityCheckboxes = [
+  { name: 'busStops', label: 'Bus Stops' },
+  { name: 'GPs', label: 'General Practitioners' },
+  { name: 'dentists', label: 'Dentists' },
+  { name: 'libraries', label: 'Libraries' }
+];
+
+const disamenityCheckboxes = [
+  { name: 'landfills', label: 'Landfills' },
+  { name: 'wasteSites', label: 'Waste Sites' }
+];
+
 class Search extends Component{
 
   constructor(props){
     super(props);
-    this.state = { query: '', loading: true, activeAccord: 0, r: 2000 };
-    console.log(this.props);
+    this.state = { 
+      query: '',
+      loading: true,
+      activeAccord: 0,
+      r: 2000,
+      checkedItems: new Map()
+    };
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleToggleChange = this.handleToggleChange.bind(this);
   }
 
   componentWillMount(){
@@ -71,8 +93,16 @@ class Search extends Component{
   handleRangeChange(e, { value }){
     this.setState({ r: value })
   }
+
+  handleToggleChange(e){
+    const item = e.target.name;
+    const isChecked = e.target.checked;
+    this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
+  }
+  
   render(){
     let { query, loading, activeAccord } = this.state;
+
     let rangeOptions = {
       start: this.state.r,
       min:1000,
@@ -88,13 +118,15 @@ class Search extends Component{
           vertical
           className='top bar'
         >
-        <Grid columns={3}>
+        <Grid>
           <Grid.Row>
             <Grid.Column>
-              <h3 style={{ 'marginLeft': 0 }}>
+              <h3 align='left' style={{ 'display': 'inline', 'marginLeft': 0 }}>
                 <Icon onClick={ this.handleSubmit } name='search' className='query' inverted circular link />
                 { query }
               </h3>
+              <Button floated='right' icon primary size='big'><Icon name='list' />List View</Button>
+              <Button floated='right' icon primary size='big'><Icon name='map marker alternate' />Map View</Button>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -111,11 +143,17 @@ class Search extends Component{
                   <Menu.Item>
                     <Accordion.Title
                       active={activeAccord === 0}
-                      content={'Range ' + this.state.r/1000 + ' km'}
+                      content={'Range'}
                       index={0}
                       onClick={this.handleClick}
                     />
-                    <Accordion.Content active={activeAccord === 0} content={<Slider value={this.state.r} discrete inverted={false} settings={rangeOptions} />} />
+                    <Accordion.Content active={activeAccord === 0} 
+                    content={
+                      <div>
+                      <Label pointing='below'>{ this.state.r/1000 + ' km' }</Label> 
+                      <Slider value={this.state.r} discrete inverted={false} settings={rangeOptions} />
+                      </div>
+                    }/>
                   </Menu.Item>
                   <Menu.Item>
                     <Accordion.Title
@@ -124,7 +162,16 @@ class Search extends Component{
                       index={1}
                       onClick={this.handleClick}
                     />
-                    <Accordion.Content active={activeAccord === 1} content={<p>test</p>} />
+                    <Accordion.Content 
+                      active={activeAccord === 1} 
+                      content={
+                        <Form>
+                          {amenityCheckboxes.map((amenity, index) => (
+                            <ToggleBox key={index} name={amenity.name} label={amenity.label} checked={this.state.checkedItems.get(amenity.name)} onChange={this.handleToggleChange}  />
+                          ))}
+                        </Form>
+                      } 
+                    />
                   </Menu.Item>
                   <Menu.Item>
                     <Accordion.Title
@@ -133,7 +180,16 @@ class Search extends Component{
                       index={2}
                       onClick={this.handleClick}
                     />
-                    <Accordion.Content active={activeAccord === 2} content={<p>test</p>} />
+                    <Accordion.Content 
+                      active={activeAccord === 2} 
+                      content={
+                        <Form>
+                          {disamenityCheckboxes.map((disamenity, index) => (
+                            <ToggleBox key={index}  name={disamenity.name} label={disamenity.label} checked={this.state.checkedItems.get(disamenity.name)} onChange={this.handleToggleChange}  />
+                          ))}
+                        </Form>
+                      } 
+                    />
                   </Menu.Item>
                 </Accordion>
                 </Segment>
