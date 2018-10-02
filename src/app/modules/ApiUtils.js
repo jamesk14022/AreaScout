@@ -52,34 +52,6 @@ export const fetchPoliceNeighbourhoodDetails = (force, neighbourhood) => {
   });
 }
 
-export const fetchSmallAreaAges = (geocode) => {
-  let url = `http://localhost:3000/api/agedistribution/${encodeURIComponent(geocode)}`;
-  return fetch(url, {
-    method: 'GET'
-  });
-}
-
-export const fetchSmallAreaTransport = (geocode) => {
-  let url = `http://localhost:3000/api/transportdistribution/${encodeURIComponent(geocode)}`;
-  return fetch(url, {
-    method: 'GET'
-  });
-}
-
-export const fetchSmallAreaHousing = (geocode) => {
-  let url = `http://localhost:3000/api/housingdistribution/${encodeURIComponent(geocode)}`;
-  return fetch(url, {
-    method: 'GET'
-  });
-}
-
-export const fetchSmallAreaPopulation = (geocode) => {
-  let url = `http://localhost:3000/api/populationdistribution/${encodeURIComponent(geocode)}`;
-  return fetch(url, {
-    method: 'GET'
-  });
-} 
-
 export const getLongLat = (query) => {
   // Get latidude & longitude from address.
   return Geocode.fromAddress(query);
