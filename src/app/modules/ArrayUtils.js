@@ -52,3 +52,11 @@ export const sliceArrayByDistance = (array, km) => {
   }
   return array;
 }
+
+export const filterByType = (array, type) => {
+  return array.filter((item, index, self) => {
+    console.log(item.Type)
+    console.log(type)
+    return item.Type !== type
+  });
+}
