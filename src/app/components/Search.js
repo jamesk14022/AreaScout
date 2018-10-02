@@ -2,30 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import queryWithRouter from './../modules/queryWithRouter';
-import {
-  Form,
-  Grid,
-  Label,
-  Button,
-  Field,
-  Icon,
-  Segment,
-  Checkbox,
-  Select,
-  Accordion,
-  Menu
-} from 'semantic-ui-react';
-import { Slider } from 'react-semantic-ui-range'
 import ToggleBox from './ToggleBox'
 import DesktopContainer from './containers/DesktopContainer';
 import MobileContainer from './containers/MobileContainer';
+import { Segment, Dimmer, Loader } from 'semantic-ui-react';
+import ListView from './ListView';
+import MapView from './MapView';
 import Footer from './Footer';
-import SchoolsCard from './cards/SchoolsCard';
-import AmenitiesCard from './cards/AmenitiesCard';
-import DisamenitiesCard from './cards/DisamenitiesCard';
-import OverviewCard from './cards/OverviewCard';
-import PoliceCard from './cards/PoliceCard';
 import './../../resources/css/search.css';
+import { 
+  fetchOverview,
+  fetchAmenities,
+  fetchDisamenities,
+  fetchStreetCrime,
+  fetchSchools, 
+  fetchPoliceNeighbourhoodDetails,
+  fetchPoliceNeighbourhood,
+  fetchSmallAreaAges,
+  fetchSmallAreaTransport,
+  fetchSmallAreaHousing,
+  fetchSmallAreaPopulation
+} from './../modules/ApiUtils'; 
+import {
+  parseAmenityData,
+  parseDisamenityData,
+  parseSchoolData,
+  parsePoliceData
+} from './../modules/DataParseUtils';
+import { filterByType } from './../modules/ArrayUtils'
 
 const ResponsiveContainer = ({ children, title, breadcrumb }) => (
   <div>
@@ -35,31 +39,27 @@ const ResponsiveContainer = ({ children, title, breadcrumb }) => (
 );
 
 const amenityCheckboxes = [
-  { name: 'busStops', label: 'Bus Stops' },
-  { name: 'GPs', label: 'General Practitioners' },
-  { name: 'dentists', label: 'Dentists' },
-  { name: 'libraries', label: 'Libraries' }
+  { name: 'busStops', label: 'Bus Stops', category: 'Bus Stop' },
+  { name: 'GPs', label: 'General Practitioners', category: 'G.P' },
+  { name: 'dentists', label: 'Dentists', category: 'Dentist' },
+  { name: 'libraries', label: 'Libraries', category: 'Library' }
 ];
 
 const disamenityCheckboxes = [
-  { name: 'landfills', label: 'Landfills' },
-  { name: 'wasteSites', label: 'Waste Sites' }
+  { name: 'landfills', label: 'Landfills', category: 'Landfill' },
+  { name: 'wasteSites', label: 'Waste Sites', category: 'Waste Site' }
 ];
 
 class Search extends Component{
 
   constructor(props){
     super(props);
-    this.state = { 
-      query: '',
-      loading: true,
-      activeAccord: 0,
-      r: 2000,
-      checkedItems: new Map()
-    };
-
-    this.handleClick = this.handleClick.bind(this);
+    this.refreshData = this.refreshData.bind(this);
+    this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleToggleChange = this.handleToggleChange.bind(this);
+    this.filterAmenities = this.filterAmenities.bind(this);
+    this.filterDisamenities = this.filterDisamenities.bind(this);
+    this.state = { isLoading: true , checkedItems: new Map() };
   }
 
   componentWillMount(){
@@ -67,168 +67,211 @@ class Search extends Component{
     if(!long || !lat || !r || !queryString){
       this.props.dispatch(push(`/notfound`));
     }else{
-      this.setState({ query: queryString, long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
+      this.setState({ 
+        query: queryString,
+        long: parseFloat(long).toFixed(3),
+        lat: parseFloat(lat).toFixed(3),
+        postcode: postcode,
+        r: parseInt(r),
+        loading: false
+      }, this.refreshData);
     }
   }
 
   // props.location.query injected by queryWithRouter.js
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps, prevState){
     if(this.props.location.query !== prevProps.location.query){
       let { long, lat, r, postcode, queryString } = this.props.location.query;
       if(!long || !lat || !r || !queryString){
         this.props.dispatch(push(`/notfound`));
       }else{
-        this.setState({ query: queryString, long: parseFloat(long).toFixed(3), lat: parseFloat(lat).toFixed(3), postcode: postcode, r: parseInt(r), loading: false });
+        this.setState({ 
+          query: queryString,
+          long: parseFloat(long).toFixed(3),
+          lat: parseFloat(lat).toFixed(3),
+          postcode: postcode, r: parseInt(r)
+        }, this.refreshData);
+      }
+    }else{
+      if(this.state.r !== prevState.r ){
+        this.refreshData();
       }
     }
   }
 
-  handleClick(e, titleProps){
-    const { index } = titleProps;
-    const { activeAccord } = this.state;
-    const newIndex = activeAccord === index ? -1 : index;
-    this.setState({ activeAccord: newIndex });
+  refreshData(){
+    let { long, lat, r, postcode } = this.state;
+    Promise.all([fetchOverview(postcode),
+                 fetchAmenities(long, lat, r),
+                 fetchDisamenities(long, lat, r),
+                 fetchSchools(long, lat, r),
+                 fetchStreetCrime(long, lat)
+    ]).then((results) => {
+      let data = [];
+      for(let i =0; i < results.length; i++){
+        data[i] = results[i].json();
+      }
+      Promise.all(data).then((results) => {
+        this.updateNeighbourhood(long, lat, results);
+      });
+    }).catch((err) => (
+      console.log(err)
+    ));
   }
 
-  handleRangeChange(e, { value }){
+  updateNeighbourhood(long, lat, results){
+    fetchPoliceNeighbourhood(long, lat).then((response) => {
+      return response.json();
+    }).then((content) => {
+      results[4].streetCrime = results[4];
+      results[4].neighbourhood = {};
+      results[4].neighbourhood = content;
+      return fetchPoliceNeighbourhoodDetails(results[4].neighbourhood.force, results[4].neighbourhood.neighbourhood);
+    }).then((response) => {
+      return response.json();
+    }).then((json) => {
+      results[4].neighbourhood = json;
+      this.updateCensusData(results, results[0].ons[0].oa11);
+    }).catch(err => console.log(err));
+  }
+
+  updateCensusData(payLoad, geocode){
+    Promise.all([
+      fetchSmallAreaTransport(geocode),
+      fetchSmallAreaAges(geocode),
+      fetchSmallAreaHousing(geocode),
+      fetchSmallAreaPopulation(geocode)
+    ]).then((results) => {
+      let smallAreaData = [];
+      for(let i = 0; i<results.length; i++){
+        smallAreaData[i] = results[i].json();
+      }
+      Promise.all(smallAreaData).then((json) => {
+        payLoad.push({
+          transportDist: json[0],
+          ageDist: json[1],
+          housingDist: json[2],
+          populationDist: json[3]
+        });
+        this.updateViews(payLoad);
+      });
+    }).catch((err) => console.log(err));
+  }
+
+  //strips amenity and disamenity data based on checkboxes ticked
+  filterAmenities(amenityData){
+    for(let prop in amenityCheckboxes){
+      if (amenityCheckboxes.hasOwnProperty(prop)) {
+        if(this.state.checkedItems.get(amenityCheckboxes[prop].name) === false){
+          amenityData = filterByType(amenityData, amenityCheckboxes[prop].category);
+        }
+      }
+    }
+    return amenityData;
+  }
+
+  filterDisamenities(disamenityData){
+    for(let prop in disamenityCheckboxes){
+      if (disamenityCheckboxes.hasOwnProperty(prop)) {
+        if(this.state.checkedItems.get(disamenityCheckboxes[prop].name) === false){
+          disamenityData = filterByType(disamenityData, disamenityCheckboxes[prop].category);
+        }
+      }
+    }
+    return disamenityData;
+  }
+
+  updateViews(data){
+    let { lat, long, r } = this.state;
+    data[1] = parseAmenityData(data[1]);
+    data[2] = parseDisamenityData(data[2]);
+    data[3] = parseSchoolData(data[3]);
+    data[4].streetCrime = parsePoliceData(data[4].streetCrime, lat, long, r);
+    this.setState({ 
+      isLoading: false,
+      overviewData: data[0],
+      amenityData: data[1],
+      disamenityData: data[2],
+      schoolsData: data[3],
+      policingData: data[4],
+      ageData: data[5].ageDist,
+      transportData: data[5].transportDist,
+      housingData: data[5].housingDist,
+      populationData: data[5].populationDist
+    });
+  }
+
+  handleRangeChange(value){
     this.setState({ r: value })
   }
-
-  handleToggleChange(e){
-    const item = e.target.name;
-    const isChecked = e.target.checked;
+  
+  handleToggleChange(e, data){
+    const item = data.name;
+    const isChecked = data.checked;
     this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
   }
-  
+
   render(){
-    let { query, loading, activeAccord } = this.state;
+    let { long,
+          lat,
+          r,
+          query,
+          postcode,
+          isLoading,
+          overviewData,
+          amenityData,
+          disamenityData,
+          schoolsData,
+          policingData,
+          ageData,
+          transportData,
+          housingData,
+          populationData,
+          checkedItems
+    } = this.state;
 
-    let rangeOptions = {
-      start: this.state.r,
-      min:1000,
-      max:10000,
-      step:1000,
-      onChange: (value) => { this.setState({ r: value }) }
-    }
-
-  	return(
-  	  <div id="Search">
-  	  	<ResponsiveContainer title='Search' breadcrumb={false}>
-        <Segment
-          vertical
-          className='top bar'
-        >
-        <Grid>
-          <Grid.Row>
-            <Grid.Column>
-              <h3 align='left' style={{ 'display': 'inline', 'marginLeft': 0 }}>
-                <Icon onClick={ this.handleSubmit } name='search' className='query' inverted circular link />
-                { query }
-              </h3>
-              <Button floated='right' icon primary size='big'><Icon name='list' />List View</Button>
-              <Button floated='right' icon primary size='big'><Icon name='map marker alternate' />Map View</Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <hr className='upper divide'/>
-        </Segment>
-        <Segment vertical className='main results' >
-          <Grid stackable>
-          <Grid.Row>
-              <Grid.Column width={4}>
-                <Segment vertical className='filter'>
-                <h3>Filter</h3>
-                <hr />
-                <Accordion as={Menu} vertical>
-                  <Menu.Item>
-                    <Accordion.Title
-                      active={activeAccord === 0}
-                      content={'Range'}
-                      index={0}
-                      onClick={this.handleClick}
-                    />
-                    <Accordion.Content active={activeAccord === 0} 
-                    content={
-                      <div>
-                      <Label pointing='below'>{ this.state.r/1000 + ' km' }</Label> 
-                      <Slider value={this.state.r} discrete inverted={false} settings={rangeOptions} />
-                      </div>
-                    }/>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Accordion.Title
-                      active={activeAccord === 1}
-                      content='Amenities'
-                      index={1}
-                      onClick={this.handleClick}
-                    />
-                    <Accordion.Content 
-                      active={activeAccord === 1} 
-                      content={
-                        <Form>
-                          {amenityCheckboxes.map((amenity, index) => (
-                            <ToggleBox key={index} name={amenity.name} label={amenity.label} checked={this.state.checkedItems.get(amenity.name)} onChange={this.handleToggleChange}  />
-                          ))}
-                        </Form>
-                      } 
-                    />
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Accordion.Title
-                      active={activeAccord === 1}
-                      content='Disamenities'
-                      index={2}
-                      onClick={this.handleClick}
-                    />
-                    <Accordion.Content 
-                      active={activeAccord === 2} 
-                      content={
-                        <Form>
-                          {disamenityCheckboxes.map((disamenity, index) => (
-                            <ToggleBox key={index}  name={disamenity.name} label={disamenity.label} checked={this.state.checkedItems.get(disamenity.name)} onChange={this.handleToggleChange}  />
-                          ))}
-                        </Form>
-                      } 
-                    />
-                  </Menu.Item>
-                </Accordion>
-                </Segment>
-              </Grid.Column>
-              <Grid.Column width={12}>
-              <Grid centered stackable>
-                <Grid.Row>
-                <Grid.Column width={8}>
-                  { loading ? '' : <OverviewCard postcode={ this.state.postcode } /> }
-                </Grid.Column>
-                <Grid.Column width={8}>
-                  { loading ? '' : <SchoolsCard long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row textAlign='center'>
-                <Grid.Column width={8}>
-                  { loading ? '' : <DisamenitiesCard center long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
-                </Grid.Column>
-                <Grid.Column width={8}>
-                  { loading ? '' : <AmenitiesCard center long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row textAlign='center'>
-                <Grid.Column width={8}>
-                  { loading ? '' : <PoliceCard center long={ this.state.long } lat={ this.state.lat } r={ this.state.r } /> }
-                </Grid.Column>
-                <Grid.Column width={8}>
-
-                </Grid.Column>
-              </Grid.Row>
-              </Grid>
-            </Grid.Column>
-          </Grid.Row>
-          </Grid>
-        </Segment>
-        <Footer />
+    if(isLoading){
+      return(
+        <div id="Search">
+        <ResponsiveContainer title='Search' breadcrumb={false}>
+          <Segment style={{ 'minHeight': 300 }}>
+            <Dimmer active>
+              <Loader size="big" />
+            </Dimmer>
+          </Segment>
+          <Footer />
         </ResponsiveContainer>
-  	  </div>
-  	);
+        </div>
+      );
+    }else{
+      return(
+        <div id="Search">
+        <ResponsiveContainer title='Search' breadcrumb={false}>
+          <ListView
+            long={long}
+            lat={lat}
+            r={r}
+            query={query}
+            postcode={postcode}
+            overview={overviewData}
+            amenities={this.filterAmenities(amenityData)}
+            disamenities={this.filterDisamenities(disamenityData)}
+            schools={schoolsData}
+            police={policingData}
+            age={ageData}
+            transport={transportData}
+            housing={housingData}
+            population={populationData}
+            amenityToggles={amenityCheckboxes} 
+            disamenityToggles={disamenityCheckboxes}
+            onToggleChange={this.handleToggleChange}
+            onRangeChange={this.handleRangeChange} 
+            checkedItems={this.state.checkedItems}/>
+          <Footer />
+        </ResponsiveContainer>
+        </div>
+      );
+    }
   }
 
 }

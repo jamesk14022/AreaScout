@@ -5,6 +5,7 @@ const schoolModel = require('./../models/Schools.js');
 const disamenityModel = promise.promisifyAll(require('./../models/Disamenities.js'));
 const amenityModel = promise.promisifyAll(require('./../models/Amenities.js'));
 const coreModel = promise.promisifyAll(require('./../models/Core.js'));
+const common = require('./../lib/Common.js');
 
 router.get('/schools', function(req, res){
   var long = req.query.long;
@@ -75,6 +76,52 @@ router.get('/disamenities', function(req, res){
     res.status(500).json('Error');
   });
 });
+
+//the small area geocode is represented by the key OA11 in the ONS postcode directory
+router.get('/agedistribution/:geocode', function(req, res){
+  let geocode = req.params.geocode.toUpperCase().trim();
+  coreModel.findSmallAreaAgeAsync(geocode).then(function(result){
+    let ageData = common.parseSmallAreaAges(result[0]);
+    res.status(200).json(ageData);
+  }).catch(function(err){
+    console.log(err);
+    res.status(500).json('Error');
+  })
+});
+
+router.get('/transportdistribution/:geocode', function(req, res){
+  let geocode = req.params.geocode.toUpperCase().trim();
+  coreModel.findSmallAreaTransportAsync(geocode).then(function(result){
+    let ageData = common.parseSmallAreaTransport(result[0]);
+    res.status(200).json(ageData);
+  }).catch(function(err){
+    console.log(err);
+    res.status(500).json('Error');
+  })
+});
+
+router.get('/housingdistribution/:geocode', function(req, res){
+  let geocode = req.params.geocode.toUpperCase().trim();
+  coreModel.findSmallAreaHousingAsync(geocode).then(function(result){
+    let housingData = common.parseSmallAreaHousing(result[0]);
+    res.status(200).json(housingData);
+  }).catch(function(err){
+    console.log(err);
+    res.status(500).json('Error');
+  })
+});
+
+router.get('/populationdistribution/:geocode', function(req, res){
+  let geocode = req.params.geocode.toUpperCase().trim();
+  coreModel.findSmallAreaPopulationAsync(geocode).then(function(result){
+    let populationData = common.parseSmallAreaPopulation(result[0]);
+    res.status(200).json(populationData);
+  }).catch(function(err){
+    console.log(err);
+    res.status(500).json('Error');
+  })
+});
+
 
 // matching never occurs if postocde path param isn't present so we dont need to check. 
 router.get('/postcodes/:postcode', function(req, res){

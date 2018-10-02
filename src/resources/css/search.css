@@ -30,3 +30,31 @@ div.ui.segment.main.results{
 div.semantic_ui_range_inner{
   width: 100%;
 }
+
+div.ui.vertical.segment.tall{
+	height: 100%;
+	padding-top: 0px;
+}
+
+div.ui.vertical.segment.filter{
+	padding: 0px 10px;
+	margin-top: 5px;
+	min-height: 200px;
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 25px;
+}
+
+div.right.floated.content.politician.label{
+  margin-top: 10px;
+}
+
+svg.svg-inline--fa.fa-external-link-alt.fa-w-18.arrow.icon{
+  margin-right: 10px !important; 
+}
+
+div.metric-title{
+  color: #4183c4;
+  font-weight: 700;
+}
+

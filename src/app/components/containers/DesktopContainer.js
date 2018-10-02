@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Breadcrumb, Container, Button, Responsive, Menu, Visibility } from 'semantic-ui-react';
 import MenuButtons from './../MenuButtons';
-import SearchBar from './../SearchBar';
 
 class DesktopContainer extends Component {
   state = {};
@@ -35,7 +34,6 @@ class DesktopContainer extends Component {
             >
               <Container textAlign='left'>
                 <Menu.Item fitted='horizontally' id='brand' as='a' href='/'>AreaScout<sub>(NI)</sub></Menu.Item>
-                <Menu.Item><SearchBar /></Menu.Item>
                 <MenuButtons />
               </Container>
             </Menu>

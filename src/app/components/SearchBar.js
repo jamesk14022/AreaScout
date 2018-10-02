@@ -47,28 +47,25 @@ class SearchBar extends Component{
       this.setState({ loading: false });
   	}).catch((err) => {
   	  this.setState({ loading: false });
-  	  this.warn();
   	  console.log(err);
   	});
   }
 
   render(){
   	let { loading } = this.state;
-    let { mobile } = this.props;
+    let { mobile, defaultValue, width = '500px' } = this.props;
 
     return(
       <Form onSubmit={ this.handleSubmit }>
 	    <Input
+      defaultValue={ defaultValue }
 	    onChange = { this.handleChange }
-	    value={ this.state.query } 
 	    loading={ loading ? true : false }
 	    icon={<Icon onClick={ this.handleSubmit } name='search' inverted circular link />} 
 	    placeholder='Search...' 
-	    size='big'
+	    size='medium'
 		  style={{
-		    width: mobile ? '95%' : '500px',
-		    marginTop: '2em',
-        marginBottom: mobile ? '2em' : '0em'
+		    width: mobile ? '95%' : width
 		  }}
 	    />
       </Form>

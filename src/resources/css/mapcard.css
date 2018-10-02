@@ -1,0 +1,31 @@
+div#MapCard div.content{
+  margin-top: 0px;
+  padding-top: 0px;
+}
+
+.spread:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  min-height: 900px;
+  display: block;
+  background-image: url("/map.png");
+  filter: blur(1px) opacity(40%);
+}
+
+.spread {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 900px;
+  background: black;
+}
+
+.spread button.mapview.launch{
+  margin: auto;
+  margin-top: 80%;
+  display: block;
+}

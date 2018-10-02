@@ -1,0 +1,10 @@
+div.viewToggles{
+  padding: 20px;
+}
+
+div.sidePanel{
+  min-height: 400px;
+  min-width: 200px;
+  background-color: white;
+  padding: 20px;
+}
