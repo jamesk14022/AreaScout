@@ -2,7 +2,7 @@ import Geocode from 'react-geocode';
 // set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
 Geocode.setApiKey(process.env.REACT_APP_MAPS_API_KEY);
 
-const apiHost = (process.env.API_HOST) ? process.env.API_HOST : 'http://localhost:3000';
+const apiHost = (process.env.NODE_ENV === 'production') ? 'https://areascoutni.herokuapp.com' : 'http://localhost:3000';
 
 export const fetchSchools = (long, lat, radius) => {
   let url = apiHost + `/api/schools?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
