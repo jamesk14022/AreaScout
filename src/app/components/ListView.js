@@ -156,7 +156,15 @@ class ListView extends Component{
                 <TransportCard data={ transport }/>
               </Grid.Column>
               <Grid.Column width={8}>
-                <MapCard postcode={ postcode } />
+                <MapCard 
+                  amenities={ amenities }
+                  disamenities={ disamenities }
+                  schools={ schools }
+                  streetCrime={ police.streetCrime }
+                  long={ long }
+                  lat={ lat }
+                  r={ r }
+                />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row textAlign='center'>

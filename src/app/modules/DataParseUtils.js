@@ -36,6 +36,8 @@ export const parsePoliceData = (data, lat, long, r) => {
 }
 
 export const parseAmenityData = (response) => {
+  // comverting response object to flat array of obejects,
+  // each with a type property telling us of what category it is  
 	let busStops = changeArrayPropertyNames(response.busStops, [{ oldName: 'Stop_Name', newName: 'Name' }]);
 	busStops = addArrayProperty(busStops, 'Type', 'Bus Stop');
 

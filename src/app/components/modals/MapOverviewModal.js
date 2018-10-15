@@ -3,19 +3,16 @@ import { Grid, List, Modal, Header, Image } from 'semantic-ui-react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from "react-google-maps";
 import './../../../resources/css/modal.css';
 
-const Map = withScriptjs(withGoogleMap(({ latitude, longitude, r, items, isMarkerShown, onMarkerClick }) => (
+const Map = withScriptjs(withGoogleMap(({ lat, long, r, items, isMarkerShown, onMarkerClick }) => (
   <GoogleMap
     defaultZoom={13}
-    defaultCenter={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }}
+    defaultCenter={{ lat: parseFloat(lat), lng: parseFloat(long) }}
   >
-    {isMarkerShown && <Marker color='black' position={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} />}
-    <Circle center={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} radius={ parseInt(r) } strokeColor='#2f5593' />
+    {isMarkerShown && <Marker color='black' position={{ lat: parseFloat(lat), lng: parseFloat(long) }} />}
+    <Circle center={{ lat: parseFloat(lat), lng: parseFloat(long) }} radius={ parseInt(r) } strokeColor='#2f5593' />
     {items.map((item) => (
       <Marker 
-        label={ (items.indexOf(item)+1).toString() }
-        key={ items.indexOf(item) }
         position={{ lat: parseFloat(item.geometry.coordinates[1]), lng: parseFloat(item.geometry.coordinates[0]) }} 
-        onClick={ () => { onMarkerClick(items.indexOf(item)) } }
       />
     ))}
   </GoogleMap>
@@ -24,20 +21,44 @@ const Map = withScriptjs(withGoogleMap(({ latitude, longitude, r, items, isMarke
 class MapOverviewModal extends Component{
   constructor(props){
   	super(props);
-  	this.focusListItem = this.focusListItem.bind(this);
-  	// array of refs, each a dom node added by the callback ref method
-  	this.listItems = [];
-  	this.state = {};
+  	this.state = { itemMap: [] };
   }
 
-  focusListItem(index){
-  	this.setState({ listFocus: index });
-  	this.listItems[index].scrollIntoView({block: "center"});
+  componentWillMount(props){
+    this.categories = {
+      Amenities: this.props.amenities,
+      Disamenities: this.props.disamenities,
+      Schools: this.props.schools,
+      Crime: this.props.streetCrime
+    }
+    this.setState({ itemMap: this.createItemMap(this.categories) })
   }
 
+  componentWillUpdate(prevProps){
+    if(prevProps !== this.props){
+      this.categories = {
+        Amenities: this.props.amenities,
+        Disamenities: this.props.disamenities,
+        Schools: this.props.schools,
+        Crime: this.props.streetCrime
+      }
+      this.setState({ itemMap: this.createItemMap(this.categories) })
+    }
+  }
+
+  createItemMap(categories){
+    let itemMap = [];
+    Object.keys(categories).map((key, index) => (
+      categories[key].map((item, index) => (
+        itemMap.push(item)
+      ))
+    ))
+    return itemMap;
+  }
   render(){
-  	let { items, trigger, title, longitude, latitude, r } = this.props;
-  	let { listFocus } = this.state;
+  	let { trigger, title, long, lat, r } = this.props;
+  	let { itemMap } = this.state;
+
   	return(
 	  <Modal trigger={ trigger } closeIcon>
 	    <Modal.Content>
@@ -47,40 +68,31 @@ class MapOverviewModal extends Component{
 	      	    <h3>{ title }</h3>
 	      	  	<hr />
       	    <List className='card-list shadow popover'  divided relaxed ordered>
-			        {categories.map((category, index) => (
-                 <List.Item key={ index } className={ (listFocus === index) ? 'modal-list focused' : 'modal-list' }>
-                  <List.Content>
-                    <List.Header as='a'><h3>{ category.name }</h3></List.Header>
-                  </List.Content>
-                </List.Item>
-                { category.items.map(item) => (
-                <List.Item key={ index } className={ (listFocus === index) ? 'modal-list focused' : 'modal-list' }>
-                  <List.Content>
-                    <List.Header as='a'>{ item.Name }</List.Header>
-                    <List.Description as='a'>{ item.Type }</List.Description>
-                    <div style={{ 'display': 'inline' }} ref={ (ref) => this.listItems[index] = ref }></div>
-                  </List.Content>
-                  <List.Content floated='right'>
-                    { (item.dist.calculated/1000).toFixed(2) } km
-                  </List.Content>
-                </List.Item>
-                )}
-			        ))}
+                {itemMap.map((item, index) => (
+                  <List.Item key={ index } className='modal-list'>
+                    <List.Content>
+                      <List.Header as='a'>{ item.Name }</List.Header>
+                      <List.Description as='a'>{ item.Type }</List.Description>
+                      <div style={{ 'display': 'inline' }}></div>
+                    </List.Content>
+                    <List.Content floated='right'>
+                      { (item.dist.calculated/1000).toFixed(2) } km
+                    </List.Content>
+                  </List.Item>
+                ))}
 			      </List>
 	      	  </Grid.Column>
 	      	  <Grid.Column width={11}>
-      	  	      <Map
-      	  	      	onMarkerClick={ this.focusListItem }
-      			        isMarkerShown={ false }
-      			        r={ r }
-      			        items={ items }
-      			        longitude={ longitude }
-      			        latitude={ latitude }
-      			        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg25YDGx7CqI0tCHiZermsRveElipQjWs&v=3.exp&libraries=geometry,drawing,places"
-      			        loadingElement={<div style={{ height: `100%` }} />}
-      			        containerElement={<div style={{ height: `500px` }} />}
-      			        mapElement={<div style={{ height: `100%` }} />}
-      			      />
+              <Map
+                items={ itemMap }
+                r={ r }
+                long={ long }
+                lat={ lat }
+                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg25YDGx7CqI0tCHiZermsRveElipQjWs&v=3.exp&libraries=geometry,drawing,places"
+                loadingElement={<div style={{ height: `100%` }} />}
+                containerElement={<div style={{ height: `600px` }} />}
+                mapElement={<div style={{ height: `100%` }} />}
+              />
 	      	  </Grid.Column>
 	      	</Grid.Row>
 	      </Grid>

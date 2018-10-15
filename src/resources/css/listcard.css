@@ -7,3 +7,10 @@ div.ui.card{
 .card-list{
   text-align: left;
 }
+
+div.chart.container{
+  width: 280px;
+  height: 100%;
+  margin: 0px auto;
+  overflow: hidden;
+}

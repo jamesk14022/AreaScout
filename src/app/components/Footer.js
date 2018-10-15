@@ -14,21 +14,13 @@ const Footer = () => (
       <Container>
         <Grid divided inverted stackable>
           <Grid.Row>
-            <Grid.Column width={3}>
-              <Header inverted as='h4' content='Links' />
-              <List link inverted>
+            <Grid.Column width={16}>
+              <List bulleted horizontal>
                 <List.Item><Link to='/'>Home</Link></List.Item>
                 <List.Item><Link to='/about'>About</Link></List.Item>
                 <List.Item><Link to='/contact'>Contact</Link></List.Item>
+                <List.Item><p>Built By James Kingsbury, 2018</p></List.Item>
               </List>
-            </Grid.Column>
-            <Grid.Column width={10}>
-              <Header as='h4' inverted>
-                Footer Header
-              </Header>
-              <p>
-                Extra space for a call to action inside the footer that could help re-engage users.
-              </p>
             </Grid.Column>
           </Grid.Row>
         </Grid>
