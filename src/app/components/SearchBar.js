@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { getLongLat } from './../modules/ApiUtils';
-import { Form, Icon, Input } from 'semantic-ui-react';
+import { Form, Icon, Input, Label } from 'semantic-ui-react';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 
 class SearchBar extends Component{
   constructor(props){
   	super(props);
-  	this.state = { loading: false, query: '' };
+  	this.state = { loading: false, query: '', invalidAddress: false };
   	this.handleSubmit = this.handleSubmit.bind(this);
   	this.handleChange = this.handleChange.bind(this);
     this.getLongLat = this.getLongLat.bind(this);
@@ -18,6 +18,14 @@ class SearchBar extends Component{
   	this.setState({ query: e.target.value });
   }
 
+  getPredictedAddressString(addressComponents){
+    let predicted = '';
+    for(let i =0; i<addressComponents.length; i++){
+      predicted += addressComponents[i]['long_name'] + ', ';
+    }
+    return predicted.substring(0, predicted.length-2);
+  }
+
   //takes takes an address components array
   findPostcode(addressComponents){
     for(let i = 0; i<addressComponents.length; i++){
@@ -26,7 +34,7 @@ class SearchBar extends Component{
         return addressComponents[i]['long_name'].replace(/\s+/, "");
       }
     }
-    throw 'postcode not found';
+    return false;
   }
 
   //fired when user hits return or clicks search icon
@@ -38,36 +46,46 @@ class SearchBar extends Component{
 
   getLongLat(query){
   	getLongLat(query).then((response) => {
-  	  console.log(response);
-      const { lng, lat } = response.results[0].geometry.location;
-      const postcode = this.findPostcode(response.results[0]['address_components']);
-      const uri = `/search?long=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}&postcode=${encodeURIComponent(postcode)}&queryString=${encodeURIComponent(this.state.query)}&r=2000`;
-
-      this.props.dispatch(push(uri));
-      this.setState({ loading: false });
+      const result = response.results[0];
+      const { lng, lat } = result.geometry.location;
+      const predictedAddress = this.getPredictedAddressString(result['address_components']);
+      const postcode = this.findPostcode(result['address_components']);
+      if(postcode && postcode.substring(0,2).toUpperCase().trim() == 'BT' ){
+        this.setState({ loading: false, invalidAddress: false });
+        const uri = `/search?long=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}&postcode=${encodeURIComponent(postcode)}&queryString=${encodeURIComponent(this.state.query)}&predicted=${encodeURIComponent(predictedAddress)}&r=2000`;
+        this.props.dispatch(push(uri));
+      }else{
+        this.setState({ loading: false, invalidAddress: true })
+      }
   	}).catch((err) => {
-  	  this.setState({ loading: false });
+  	  this.setState({ loading: false, invalidAddress: true });
   	  console.log(err);
   	});
   }
 
   render(){
-  	let { loading } = this.state;
-    let { mobile, defaultValue, width = '500px' } = this.props;
+  	let { loading, invalidAddress } = this.state;
+    let { mobile, defaultValue, width = '500px', size } = this.props;
 
     return(
       <Form onSubmit={ this.handleSubmit }>
-	    <Input
-      defaultValue={ defaultValue }
-	    onChange = { this.handleChange }
-	    loading={ loading ? true : false }
-	    icon={<Icon onClick={ this.handleSubmit } name='search' inverted circular link />} 
-	    placeholder='Search...' 
-	    size='medium'
-		  style={{
-		    width: mobile ? '95%' : width
-		  }}
-	    />
+        <Form.Field>
+    	    <Input
+            defaultValue={ defaultValue }
+      	    onChange = { this.handleChange }
+      	    loading={ loading ? true : false }
+      	    icon={<Icon onClick={ this.handleSubmit } name='search' inverted circular link />} 
+      	    placeholder='Search...' 
+      	    size={ size || 'huge' }
+      		  style={{
+      		    width: mobile ? '95%' : width,
+              marginTop: '30px'
+      		  }}
+    	    />
+          {(invalidAddress) ?
+            <Label size='big' color='red' pointing>Please enter a valid Northern Ireland address!</Label>
+          : ''}
+        </Form.Field>
       </Form>
     );
   }

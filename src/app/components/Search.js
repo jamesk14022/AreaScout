@@ -63,7 +63,7 @@ class Search extends Component{
   }
 
   componentWillMount(){
-    let { long, lat, r, postcode, queryString } = this.props.location.query;
+    let { long, lat, r, postcode, queryString, predicted } = this.props.location.query;
     if(!long || !lat || !r || !queryString){
       this.props.dispatch(push(`/notfound`));
     }else{
@@ -73,6 +73,7 @@ class Search extends Component{
         lat: parseFloat(lat).toFixed(3),
         postcode: postcode,
         r: parseInt(r),
+        predicted: predicted,
         loading: false
       }, this.refreshData);
     }
@@ -81,7 +82,7 @@ class Search extends Component{
   // props.location.query injected by queryWithRouter.js
   componentDidUpdate(prevProps, prevState){
     if(this.props.location.query !== prevProps.location.query){
-      let { long, lat, r, postcode, queryString } = this.props.location.query;
+      let { long, lat, r, postcode, queryString, predicted } = this.props.location.query;
       if(!long || !lat || !r || !queryString){
         this.props.dispatch(push(`/notfound`));
       }else{
@@ -89,7 +90,8 @@ class Search extends Component{
           query: queryString,
           long: parseFloat(long).toFixed(3),
           lat: parseFloat(lat).toFixed(3),
-          postcode: postcode, r: parseInt(r)
+          postcode: postcode, r: parseInt(r),
+          predicted: predicted,
         }, this.refreshData);
       }
     }else{
@@ -217,6 +219,7 @@ class Search extends Component{
           r,
           query,
           postcode,
+          predicted,
           isLoading,
           overviewData,
           amenityData,
@@ -252,6 +255,7 @@ class Search extends Component{
             lat={lat}
             r={r}
             query={query}
+            predicted={predicted}
             postcode={postcode}
             overview={overviewData}
             amenities={this.filterAmenities(amenityData)}
