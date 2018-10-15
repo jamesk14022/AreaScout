@@ -32,6 +32,7 @@ class ListView extends Component{
     let { long,
           lat,
           r,
+          predicted,
           postcode,
           overview,
           amenities,
@@ -64,8 +65,17 @@ class ListView extends Component{
         vertical
         className='top bar'
       >
-        <SearchBar defaultValue={ query } />
-      <hr className='upper divide'/>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <SearchBar size='big' defaultValue={ query } />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <h3 className='predicted text'>{ predicted }</h3>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <hr className='upper divide'/>
       </Segment>
       <Segment vertical className='main results' >
         <Grid stackable>

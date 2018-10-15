@@ -58,3 +58,7 @@ div.metric-title{
   font-weight: 700;
 }
 
+h3.predicted.text{
+  position: absolute;
+  bottom: 0;
+}
