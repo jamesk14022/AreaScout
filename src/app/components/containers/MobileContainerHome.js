@@ -40,18 +40,20 @@ class MobileContainerHome extends Component {
             <Segment
               inverted
               textAlign='center'
-              style={{ minHeight: 350, padding: '1em 0em', backgroundColor: '#2f5593' }}
+              style={{ minHeight: '350px', padding: '1em 0em' }}
               vertical
             >
+            <div className='spread-mobile'>
               <Container>
                 <Menu inverted pointing secondary size='large'>
-                  <Menu.Item onClick={this.handleToggle}>
+                  <Menu.Item position='left' onClick={this.handleToggle}>
                     <Icon name='sidebar' />
                   </Menu.Item>
                   <MenuButtons />
                 </Menu>
               </Container>
               <HomepageHeading mobile />
+            </div>
             </Segment>
             {children}
           </Sidebar.Pusher>

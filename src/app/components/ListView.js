@@ -67,10 +67,10 @@ class ListView extends Component{
       >
         <Grid>
           <Grid.Row>
-            <Grid.Column width={10}>
+            <Grid.Column computer={10} mobile={16}>
               <SearchBar size='big' defaultValue={ query } />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column only='computer' computer={6}>
               <h4 className='predicted text'>{ predicted }</h4>
             </Grid.Column>
           </Grid.Row>
@@ -80,7 +80,7 @@ class ListView extends Component{
       <Segment vertical className='main results' >
         <Grid stackable>
         <Grid.Row>
-            <Grid.Column width={4}>
+            <Grid.Column only='computer' width={4}>
               <Segment vertical className='tall'>
               <Segment vertical className='filter'>
               <h3>Filter</h3>
@@ -135,7 +135,7 @@ class ListView extends Component{
               </Segment>
               </Segment>
             </Grid.Column>
-            <Grid.Column width={12}>
+            <Grid.Column computer={12} mobile={16}>
             <Grid centered stackable>
               <Grid.Row>
               <Grid.Column width={8}>

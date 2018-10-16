@@ -3,7 +3,7 @@ i.search.query{
 }
 
 div.ui.segment.top.bar{
-  padding: 0%;
+  padding: 2% 2%;
 }
 
 hr.upper.divide{
@@ -14,8 +14,7 @@ div#Search{
   background-color: #e8e8e8;
 }
 
-div#ListView{
-  min-width: 900px;
+div#DesktopContainer div#ListView{
   max-width: 1000px;
   margin: 0px auto;
 }

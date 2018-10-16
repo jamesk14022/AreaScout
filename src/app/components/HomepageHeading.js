@@ -16,10 +16,16 @@ const HomepageHeading = ({ mobile }) => (
       style={{
         fontSize: '2.3em',
         fontWeight: 'normal',
-        marginTop: '4.3em',
+        marginTop: (!mobile) ? '25%' : '5%'
       }}
     />
-    <SearchBar mobile={(mobile) ? true : false } />
+    {(mobile) ? 
+      <div className='mobile search'>
+        <SearchBar mobile={true} />
+      </div>
+    :
+      <SearchBar mobile={false} />
+    }
   </Container>
 );
 

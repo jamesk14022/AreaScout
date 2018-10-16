@@ -25,6 +25,28 @@
   background: black;
 }
 
+.spread-mobile:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  
+  display: block;
+  background-image: url("/house6.jpg");
+  height: 350px;
+  filter: blur(1px) opacity(40%);
+}
+
+.spread-mobile {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 350px;
+  background: black;
+}
+
 br {
   display: block;
   margin: 5px 0;

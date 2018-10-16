@@ -14,7 +14,7 @@ class MobileContainer extends Component {
   handleToggle = () => this.setState({ sidebarOpened: !this.state.sidebarOpened });
 
   render() {
-    const { children, title } = this.props;
+    const { children, title, breadcrumb } = this.props;
     const { sidebarOpened } = this.state;
 
     return (
@@ -36,29 +36,32 @@ class MobileContainer extends Component {
           >
             <Segment
               inverted
+              className='mobile head'
               textAlign='center'
-              style={{ padding: '1em 0em' }}
               vertical
             >
               <Container>
                 <Menu inverted pointing secondary size='large'>
-                  <Menu.Item onClick={this.handleToggle}>
+                  <Menu.Item position='left' onClick={this.handleToggle}>
                     <Icon name='sidebar' />
                   </Menu.Item>
                   <MenuButtons />
                 </Menu>
               </Container>
             </Segment>
+          {(breadcrumb) ? 
             <Segment
             style={{ 'padding': '2% 5%', 'borderBottom': '1px solid black' }}
             vertical
             >
-          <Breadcrumb size='large'>
-            <Breadcrumb.Section link>Home</Breadcrumb.Section>
-            <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section link>{ title }</Breadcrumb.Section>
-          </Breadcrumb>
-        </Segment>
+              <Breadcrumb size='large'>
+                <Breadcrumb.Section link>Home</Breadcrumb.Section>
+                <Breadcrumb.Divider icon='right chevron' />
+                <Breadcrumb.Section link>{ title }</Breadcrumb.Section>
+              </Breadcrumb>
+            </Segment>
+          : ''
+          }
             {children}
           </Sidebar.Pusher>
         </Sidebar.Pushable>

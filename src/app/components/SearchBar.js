@@ -78,8 +78,7 @@ class SearchBar extends Component{
       	    placeholder='Search...' 
       	    size={ size || 'huge' }
       		  style={{
-      		    width: mobile ? '95%' : width,
-              marginTop: '30px'
+      		    width: '100%'
       		  }}
     	    />
           {(invalidAddress) ?

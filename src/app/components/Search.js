@@ -34,7 +34,7 @@ import { filterByType } from './../modules/ArrayUtils'
 const ResponsiveContainer = ({ children, title, breadcrumb }) => (
   <div>
     <DesktopContainer title={title} breadcrumb={breadcrumb}>{children}</DesktopContainer>
-    <MobileContainer title={title} >{children}</MobileContainer>
+    <MobileContainer title={title} breadcrumb={breadcrumb}>{children}</MobileContainer>
   </div>
 );
 
