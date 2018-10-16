@@ -15,7 +15,8 @@ div#Search{
 }
 
 div#ListView{
-  max-width: 950px;
+  min-width: 900px;
+  max-width: 1000px;
   margin: 0px auto;
 }
 
