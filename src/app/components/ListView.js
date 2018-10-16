@@ -67,11 +67,11 @@ class ListView extends Component{
       >
         <Grid>
           <Grid.Row>
-            <Grid.Column width={8}>
+            <Grid.Column width={10}>
               <SearchBar size='big' defaultValue={ query } />
             </Grid.Column>
-            <Grid.Column width={8}>
-              <h3 className='predicted text'>{ predicted }</h3>
+            <Grid.Column width={6}>
+              <h4 className='predicted text'>{ predicted }</h4>
             </Grid.Column>
           </Grid.Row>
         </Grid>

@@ -13,16 +13,18 @@ class DesktopContainer extends Component {
     const { fixed } = this.state;
 
     return (
+      <div id='DesktopContainer'>
       <Responsive minWidth={Responsive.onlyTablet.minWidth} >
         <Visibility
           once={false}
           onBottomPassed={this.showFixedMenu}
           onBottomPassedReverse={this.hideFixedMenu}
-        >
+        > 
           <Segment
             inverted
             textAlign='center'
             vertical
+            className='heading'
           >
           <div className="content">
             <Menu
@@ -37,7 +39,7 @@ class DesktopContainer extends Component {
                 <MenuButtons />
               </Container>
             </Menu>
-            </div>
+          </div>
           </Segment>
         </Visibility>
         {(breadcrumb) ?
@@ -51,6 +53,7 @@ class DesktopContainer extends Component {
         : ''}
         {children}
       </Responsive>
+      </div>
     )
   }
 }

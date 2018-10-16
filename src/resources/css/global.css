@@ -1,3 +1,7 @@
+div#app div#content{
+
+}
+
 a#brand{
   font-size: 36px;
   color: white !important;
@@ -17,6 +21,11 @@ a#brand sub{
 
 .ui.card>.content, .ui.cards>.card>.content{
   flex-grow: 0;
+}
+
+div.ui.inverted.vertical.center.aligned.segment.heading{
+  padding-bottom: 0px;
+  padding-top: 0px;
 }
 
 div.right.item{

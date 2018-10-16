@@ -3,7 +3,7 @@ i.search.query{
 }
 
 div.ui.segment.top.bar{
-  padding: 2% 15%;
+  padding: 0%;
 }
 
 hr.upper.divide{
@@ -12,6 +12,11 @@ hr.upper.divide{
 
 div#Search{
   background-color: #e8e8e8;
+}
+
+div#ListView{
+  max-width: 950px;
+  margin: 0px auto;
 }
 
 div.ui.card{
@@ -28,7 +33,7 @@ div.ui.vertical.segment{
 }
 
 div.ui.segment.main.results{
-  padding: 1% 15%;
+  padding: 1% 0%;
 }
 
 div.semantic_ui_range_inner{
@@ -60,6 +65,12 @@ svg.svg-inline--fa.fa-external-link-alt.fa-w-18.arrow.icon{
 div.metric-title{
   color: #4183c4;
   font-weight: 700;
+}
+
+h4.predicted.text{
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 div.ui.divided.relaxed.list.card-list.shadow div.right.floated.content.statistic{
