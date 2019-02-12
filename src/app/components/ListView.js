@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Form,
-  Grid,
-  Label,
-  Button,
-  Field,
-  Icon,
-  Segment,
-  Checkbox,
-  Select,
-  Accordion,
-  Menu
-} from 'semantic-ui-react';
+import { Form, Grid, Label, Segment, Accordion, Menu } from 'semantic-ui-react';
 import { Slider } from 'react-semantic-ui-range';
 import SearchBar from './SearchBar';
 import SchoolsCard from './cards/SchoolsCard';

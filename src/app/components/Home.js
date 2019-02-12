@@ -1,26 +1,16 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import {
-  Button,
-  Container,
   Grid,
   Header,
-  Icon,
   Image,
-  Menu,
-  Responsive,
-  Segment,
-  Sidebar
+  Segment
 } from 'semantic-ui-react';
-import HomepageHeading from './HomepageHeading';
-import Footer from './Footer';
-import SearchBar from './SearchBar';
-import MenuButtons from './MenuButtons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSchool, faExclamationTriangle, faUsers, faGavel } from '@fortawesome/free-solid-svg-icons';
 import DesktopContainerHome from './containers/DesktopContainerHome';
 import MobileContainerHome from './containers/MobileContainerHome';
+import Footer from './Footer';
 
 import './../../resources/css/home.css'
 

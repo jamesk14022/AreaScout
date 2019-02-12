@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  Container,
-  Menu,
-  Responsive,
-  Segment,
-  Visibility,
-} from 'semantic-ui-react';
+import { Container, Menu, Responsive, Segment, Visibility } from 'semantic-ui-react';
 import HomepageHeading from './../HomepageHeading';
 import MenuButtons from './../MenuButtons';
 

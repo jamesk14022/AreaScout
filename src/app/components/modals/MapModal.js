@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, List, Modal, Header, Image } from 'semantic-ui-react';
+import { Grid, List, Modal } from 'semantic-ui-react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from "react-google-maps";
 import './../../../resources/css/modal.css';
 
@@ -9,7 +9,7 @@ const Map = withScriptjs(withGoogleMap(({ latitude, longitude, r, items, isMarke
     defaultCenter={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }}
   >
     {isMarkerShown && <Marker color='black' position={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} />}
-    <Circle center={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} radius={ parseInt(r) } strokeColor='#2f5593' />
+    <Circle center={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} radius={ parseInt(r, 10) } strokeColor='#2f5593' />
     {items.map((item) => (
       <Marker 
         label={ (items.indexOf(item)+1).toString() }
@@ -38,6 +38,8 @@ class MapModal extends Component{
   render(){
   	let { items, trigger, title, longitude, latitude, r } = this.props;
   	let { listFocus } = this.state;
+  	const mapURI = 'https://maps.googleapis.com/maps/api/js?key=' + process.env.REACT_APP_MAPS_API_KEY + '&v=3.exp&libraries=geometry,drawing,places';
+  	
   	return(
 	  <Modal trigger={ trigger } closeIcon>
 	    <Modal.Content>
@@ -69,7 +71,7 @@ class MapModal extends Component{
 			        items={ items }
 			        longitude={ longitude }
 			        latitude={ latitude }
-			        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg25YDGx7CqI0tCHiZermsRveElipQjWs&v=3.exp&libraries=geometry,drawing,places"
+			        googleMapURL={ mapURI }
 			        loadingElement={<div style={{ height: `100%` }} />}
 			        containerElement={<div style={{ height: `500px` }} />}
 			        mapElement={<div style={{ height: `100%` }} />}

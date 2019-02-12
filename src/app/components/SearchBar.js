@@ -50,7 +50,7 @@ class SearchBar extends Component{
       const { lng, lat } = result.geometry.location;
       const predictedAddress = this.getPredictedAddressString(result['address_components']);
       const postcode = this.findPostcode(result['address_components']);
-      if(postcode && postcode.substring(0,2).toUpperCase().trim() == 'BT' ){
+      if(postcode && postcode.substring(0,2).toUpperCase().trim() === 'BT' ){
         this.setState({ loading: false, invalidAddress: false });
         const uri = `/search?long=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}&postcode=${encodeURIComponent(postcode)}&queryString=${encodeURIComponent(this.state.query)}&predicted=${encodeURIComponent(predictedAddress)}&r=2000`;
         this.props.dispatch(push(uri));
@@ -65,7 +65,7 @@ class SearchBar extends Component{
 
   render(){
   	let { loading, invalidAddress } = this.state;
-    let { mobile, defaultValue, width = '500px', size } = this.props;
+    let { defaultValue, size } = this.props;
 
     return(
       <Form onSubmit={ this.handleSubmit }>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Breadcrumb, Responsive, Icon, Button, Menu, Sidebar, Container } from 'semantic-ui-react';
+import { Segment, Breadcrumb, Responsive, Icon, Menu, Sidebar, Container } from 'semantic-ui-react';
 import MenuButtons from './../MenuButtons';
 
 class MobileContainer extends Component {

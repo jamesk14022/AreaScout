@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, List, Modal, Header, Image } from 'semantic-ui-react';
+import { Grid, List, Modal } from 'semantic-ui-react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from "react-google-maps";
 import './../../../resources/css/modal.css';
 
@@ -9,7 +9,7 @@ const Map = withScriptjs(withGoogleMap(({ lat, long, r, items, isMarkerShown, on
     defaultCenter={{ lat: parseFloat(lat), lng: parseFloat(long) }}
   >
     {isMarkerShown && <Marker color='black' position={{ lat: parseFloat(lat), lng: parseFloat(long) }} />}
-    <Circle center={{ lat: parseFloat(lat), lng: parseFloat(long) }} radius={ parseInt(r) } strokeColor='#2f5593' />
+    <Circle center={{ lat: parseFloat(lat), lng: parseFloat(long) }} radius={ parseInt(r, 10) } strokeColor='#2f5593' />
     {items.map((item) => (
       <Marker 
         position={{ lat: parseFloat(item.geometry.coordinates[1]), lng: parseFloat(item.geometry.coordinates[0]) }} 
@@ -58,6 +58,7 @@ class MapOverviewModal extends Component{
   render(){
   	let { trigger, title, long, lat, r } = this.props;
   	let { itemMap } = this.state;
+    const mapURI = 'https://maps.googleapis.com/maps/api/js?key=' + process.env.REACT_APP_MAPS_API_KEY + '&v=3.exp&libraries=geometry,drawing,places';
 
   	return(
 	  <Modal trigger={ trigger } closeIcon>
@@ -88,7 +89,7 @@ class MapOverviewModal extends Component{
                 r={ r }
                 long={ long }
                 lat={ lat }
-                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg25YDGx7CqI0tCHiZermsRveElipQjWs&v=3.exp&libraries=geometry,drawing,places"
+                googleMapURL={ mapURI }
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `600px` }} />}
                 mapElement={<div style={{ height: `100%` }} />}

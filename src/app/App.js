@@ -1,11 +1,6 @@
 // The basics
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
-// Action creators and helpers
-import { isServer } from '../store';
-
 import Routes from './routes';
 
 import 'semantic-ui-css/semantic.min.css';

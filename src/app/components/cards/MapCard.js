@@ -1,6 +1,6 @@
 import React from 'react';
 import MapOverviewModal from './../modals/MapOverviewModal';
-import { List, Card, Segment, Image, Button } from 'semantic-ui-react';
+import { Card, Button } from 'semantic-ui-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import './../../../resources/css/mapcard.css';

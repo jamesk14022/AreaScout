@@ -1,12 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Container,
-  Grid,
-  Header,
-  List,
-  Segment
-} from 'semantic-ui-react';
+import { Container, Grid, List, Segment } from 'semantic-ui-react';
 
 const Footer = () => (
   <div id="Footer">

@@ -46,6 +46,7 @@ class MapView extends Component{
 
   render(){
   	const { long, lat, r, query, postcode, toggleView, items } = this.props;
+    const mapURI = 'https://maps.googleapis.com/maps/api/js?key='+ process.env.REACT_APP_MAPS_API_KEY +'&v=3.exp&libraries=geometry,drawing,places';
   	return(
   	  <div id='MapView'>
         <Map
@@ -54,7 +55,7 @@ class MapView extends Component{
           r={ r }
           long={ long }
           lat={ lat }
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg25YDGx7CqI0tCHiZermsRveElipQjWs&v=3.exp&libraries=geometry,drawing,places"
+          googleMapURL={ mapURI }
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `600px` }} />}
           mapElement={<div style={{ height: `100%` }} />}

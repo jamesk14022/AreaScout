@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Segment, Breadcrumb, Container, Button, Responsive, Menu, Visibility } from 'semantic-ui-react';
+import { Segment, Breadcrumb, Container, Responsive, Menu, Visibility } from 'semantic-ui-react';
 import MenuButtons from './../MenuButtons';
 
 class DesktopContainer extends Component {

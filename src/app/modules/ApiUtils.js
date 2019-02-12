@@ -1,32 +1,32 @@
 import Geocode from 'react-geocode';
+import { API_HOSTNAME } from './../constants/ApiConstants';
+
 // set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
 Geocode.setApiKey(process.env.REACT_APP_MAPS_API_KEY);
 
-const apiHost = (process.env.NODE_ENV === 'production') ? 'https://areascoutni.herokuapp.com' : 'http://localhost:3000';
-
 export const fetchSchools = (long, lat, radius) => {
-  let url = apiHost + `/api/schools?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
+  let url = API_HOSTNAME + `/api/schools?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
   return fetch(url, {
   	method: 'GET'
   });
 }
 
 export const fetchAmenities = (long, lat, radius) => {
-  let url = apiHost +  `/api/amenities?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
+  let url = API_HOSTNAME +  `/api/amenities?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
   return fetch(url, {
   	method: 'GET'
   });
 }
 
 export const fetchDisamenities = (long, lat, radius) => {
-  let url = apiHost +  `/api/disamenities?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
+  let url = API_HOSTNAME +  `/api/disamenities?long=${encodeURIComponent(long)}&lat=${encodeURIComponent(lat)}&r=${encodeURIComponent(radius)}`;
   return fetch(url, {
     method: 'GET'
   });
 }
 
 export const fetchOverview = (postcode) => {
-  let url = apiHost +  `/api/postcodes/${encodeURIComponent(postcode)}`;
+  let url = API_HOSTNAME +  `/api/postcodes/${encodeURIComponent(postcode)}`;
   return fetch(url, {
     method: 'GET'
   });
@@ -55,28 +55,28 @@ export const fetchPoliceNeighbourhoodDetails = (force, neighbourhood) => {
 }
 
 export const fetchSmallAreaAges = (geocode) => {
-  let url = apiHost +  `/api/agedistribution/${encodeURIComponent(geocode)}`;
+  let url = API_HOSTNAME +  `/api/agedistribution/${encodeURIComponent(geocode)}`;
   return fetch(url, {
     method: 'GET'
   });
 }
 
 export const fetchSmallAreaTransport = (geocode) => {
-  let url = apiHost +  `/api/transportdistribution/${encodeURIComponent(geocode)}`;
+  let url = API_HOSTNAME +  `/api/transportdistribution/${encodeURIComponent(geocode)}`;
   return fetch(url, {
     method: 'GET'
   });
 }
 
 export const fetchSmallAreaHousing = (geocode) => {
-  let url = apiHost +  `/api/housingdistribution/${encodeURIComponent(geocode)}`;
+  let url = API_HOSTNAME +  `/api/housingdistribution/${encodeURIComponent(geocode)}`;
   return fetch(url, {
     method: 'GET'
   });
 }
 
 export const fetchSmallAreaPopulation = (geocode) => {
-  let url = apiHost +  `/api/populationdistribution/${encodeURIComponent(geocode)}`;
+  let url = API_HOSTNAME +  `/api/populationdistribution/${encodeURIComponent(geocode)}`;
   return fetch(url, {
     method: 'GET'
   });

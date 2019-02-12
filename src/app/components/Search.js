@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import queryWithRouter from './../modules/queryWithRouter';
-import ToggleBox from './ToggleBox'
 import DesktopContainer from './containers/DesktopContainer';
 import MobileContainer from './containers/MobileContainer';
 import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import ListView from './ListView';
-import MapView from './MapView';
 import Footer from './Footer';
 import './../../resources/css/search.css';
 import { 
@@ -30,6 +28,7 @@ import {
   parsePoliceData
 } from './../modules/DataParseUtils';
 import { filterByType } from './../modules/ArrayUtils'
+import { AMENITY_CHECKBOXES, DISAMENITY_CHECKBOXES } from './../constants/CardConstants';
 
 const ResponsiveContainer = ({ children, title, breadcrumb }) => (
   <div>
@@ -37,18 +36,6 @@ const ResponsiveContainer = ({ children, title, breadcrumb }) => (
     <MobileContainer title={title} breadcrumb={breadcrumb}>{children}</MobileContainer>
   </div>
 );
-
-const amenityCheckboxes = [
-  { name: 'busStops', label: 'Bus Stops', category: 'Bus Stop' },
-  { name: 'GPs', label: 'General Practitioners', category: 'G.P' },
-  { name: 'dentists', label: 'Dentists', category: 'Dentist' },
-  { name: 'libraries', label: 'Libraries', category: 'Library' }
-];
-
-const disamenityCheckboxes = [
-  { name: 'landfills', label: 'Landfills', category: 'Landfill' },
-  { name: 'wasteSites', label: 'Waste Sites', category: 'Waste Site' }
-];
 
 class Search extends Component{
 
@@ -72,7 +59,7 @@ class Search extends Component{
         long: parseFloat(long).toFixed(3),
         lat: parseFloat(lat).toFixed(3),
         postcode: postcode,
-        r: parseInt(r),
+        r: parseInt(r, 10),
         predicted: predicted,
         loading: false
       }, this.refreshData);
@@ -90,7 +77,7 @@ class Search extends Component{
           query: queryString,
           long: parseFloat(long).toFixed(3),
           lat: parseFloat(lat).toFixed(3),
-          postcode: postcode, r: parseInt(r),
+          postcode: postcode, r: parseInt(r, 10),
           predicted: predicted,
         }, this.refreshData);
       }
@@ -162,10 +149,10 @@ class Search extends Component{
 
   //strips amenity and disamenity data based on checkboxes ticked
   filterAmenities(amenityData){
-    for(let prop in amenityCheckboxes){
-      if (amenityCheckboxes.hasOwnProperty(prop)) {
-        if(this.state.checkedItems.get(amenityCheckboxes[prop].name) === false){
-          amenityData = filterByType(amenityData, amenityCheckboxes[prop].category);
+    for(let prop in AMENITY_CHECKBOXES){
+      if (AMENITY_CHECKBOXES.hasOwnProperty(prop)) {
+        if(this.state.checkedItems.get(AMENITY_CHECKBOXES[prop].name) === false){
+          amenityData = filterByType(amenityData, AMENITY_CHECKBOXES[prop].category);
         }
       }
     }
@@ -173,10 +160,10 @@ class Search extends Component{
   }
 
   filterDisamenities(disamenityData){
-    for(let prop in disamenityCheckboxes){
-      if (disamenityCheckboxes.hasOwnProperty(prop)) {
-        if(this.state.checkedItems.get(disamenityCheckboxes[prop].name) === false){
-          disamenityData = filterByType(disamenityData, disamenityCheckboxes[prop].category);
+    for(let prop in DISAMENITY_CHECKBOXES){
+      if (DISAMENITY_CHECKBOXES.hasOwnProperty(prop)) {
+        if(this.state.checkedItems.get(DISAMENITY_CHECKBOXES[prop].name) === false){
+          disamenityData = filterByType(disamenityData, DISAMENITY_CHECKBOXES[prop].category);
         }
       }
     }
@@ -229,8 +216,7 @@ class Search extends Component{
           ageData,
           transportData,
           housingData,
-          populationData,
-          checkedItems
+          populationData
     } = this.state;
 
     if(isLoading){
@@ -266,8 +252,8 @@ class Search extends Component{
             transport={transportData}
             housing={housingData}
             population={populationData}
-            amenityToggles={amenityCheckboxes} 
-            disamenityToggles={disamenityCheckboxes}
+            amenityToggles={AMENITY_CHECKBOXES} 
+            disamenityToggles={DISAMENITY_CHECKBOXES}
             onToggleChange={this.handleToggleChange}
             onRangeChange={this.handleRangeChange} 
             checkedItems={this.state.checkedItems}/>

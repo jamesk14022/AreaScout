@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
+import { SEGMENT_COLOURS } from './../../constants/CardConstants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { Card, Image, List, Segment } from 'semantic-ui-react';
+import { Card, Image } from 'semantic-ui-react';
 import InfoToolTip from './../InfoToolTip';
-
-const COLOURS = ['#0088FE', '#00C49F'];
 
 class GenderCard extends Component{
   render(){
@@ -31,8 +30,8 @@ class GenderCard extends Component{
                 outerRadius={60}
                 fill="#8884d8"
               >
-                {COLOURS.map((entry, index) => (
-                  <Cell fill={COLOURS[index % COLOURS.length]} key={index} />
+                { SEGMENT_COLOURS.map((entry, index) => (
+                  <Cell fill={ SEGMENT_COLOURS[index %  SEGMENT_COLOURS.length]} key={index} />
                 ))}   
               </Pie>
               <Legend verticalAlign='bottom' height={36}/>
@@ -49,8 +48,8 @@ class GenderCard extends Component{
                 outerRadius={60}
                 fill="#8884d8"
               >
-                {COLOURS.map((entry, index) => (
-                  <Cell fill={COLOURS[index % COLOURS.length]} key={index} />
+                { SEGMENT_COLOURS.map((entry, index) => (
+                  <Cell fill={ SEGMENT_COLOURS[index %  SEGMENT_COLOURS.length]} key={index} />
                 ))}   
               </Pie>
               <Legend verticalAlign='bottom' height={36}/>
