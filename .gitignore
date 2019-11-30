@@ -1,7 +1,4 @@
 .env
 
-transformations/schools-addindex.txt
-transformations/gp-geocoding.js
-transformations/dentist-geocoding.js
-transformations/library-geocoding.js
+data_parsing/*
 node_modules/*

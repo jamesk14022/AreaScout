@@ -46,10 +46,26 @@ class Search extends Component{
     this.handleToggleChange = this.handleToggleChange.bind(this);
     this.filterAmenities = this.filterAmenities.bind(this);
     this.filterDisamenities = this.filterDisamenities.bind(this);
+    this.uriToState = this.uriToState.bind(this);
     this.state = { isLoading: true , checkedItems: new Map() };
   }
 
   componentWillMount(){
+    this.uriToState();
+  }
+
+  // props.location.query injected by queryWithRouter.js
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.location.query !== prevProps.location.query){
+      this.uriToState();
+    }else{
+      if(this.state.r !== prevState.r ){
+        this.refreshData();
+      }
+    }
+  }
+
+  uriToState(){
     let { long, lat, r, postcode, queryString, predicted } = this.props.location.query;
     if(!long || !lat || !r || !queryString){
       this.props.dispatch(push(`/notfound`));
@@ -58,33 +74,10 @@ class Search extends Component{
         query: queryString,
         long: parseFloat(long).toFixed(3),
         lat: parseFloat(lat).toFixed(3),
-        postcode: postcode,
-        r: parseInt(r, 10),
+        postcode: postcode, r: parseInt(r, 10),
         predicted: predicted,
         loading: false
       }, this.refreshData);
-    }
-  }
-
-  // props.location.query injected by queryWithRouter.js
-  componentDidUpdate(prevProps, prevState){
-    if(this.props.location.query !== prevProps.location.query){
-      let { long, lat, r, postcode, queryString, predicted } = this.props.location.query;
-      if(!long || !lat || !r || !queryString){
-        this.props.dispatch(push(`/notfound`));
-      }else{
-        this.setState({ 
-          query: queryString,
-          long: parseFloat(long).toFixed(3),
-          lat: parseFloat(lat).toFixed(3),
-          postcode: postcode, r: parseInt(r, 10),
-          predicted: predicted,
-        }, this.refreshData);
-      }
-    }else{
-      if(this.state.r !== prevState.r ){
-        this.refreshData();
-      }
     }
   }
 
